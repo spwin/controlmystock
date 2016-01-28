@@ -1,0 +1,36 @@
+@extends('layouts.dashboard')
+@section('page_heading', $title.' create')
+@section('section')
+    <div class="col-sm-12">
+        <a href="{{ action ('ItemCategoriesController@index') }}" class="mb-20px block"><i class="fa fa-arrow-left fa-fw"></i>Back to list</a>
+        @if($errors->any())
+            <div class="alert alert-danger">
+                @foreach($errors->all() as $error)
+                    <p>{{ $error }}</p>
+                @endforeach
+            </div>
+        @endif
+        <div class="row">
+            <div class="col-lg-6">
+                {{ Form::model($ItemCategories, [
+                'method' => 'PATCH',
+                'action' => ['ItemCategoriesController@update', $ItemCategories->id]
+                ]) }}
+
+                <div class="form-group">
+                    {{ Form::label('title', 'item category title:', ['class' => 'control-label']) }}
+                    {{ Form::text('title', null, ['class' => 'form-control', 'required' => 'required']) }}
+                </div>
+
+                <div class="form-group">
+                    {{ Form::label('parent_id', 'Parent category:', ['class' => 'control-label']) }}
+                    {{ Form::select('parent_id', [ null => 'Root categories'] + $categories, $ItemCategories->parent_id, ['class' => 'form-control']) }}
+                </div>
+
+                {{ Form::submit('Update '.$title, ['class' => 'btn btn-primary']) }}
+
+                {{ Form::close() }}
+            </div>
+        </div>
+    </div>
+@stop
