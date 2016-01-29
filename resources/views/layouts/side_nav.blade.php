@@ -14,26 +14,39 @@
             <li {{ (Request::is('/') ? 'class="active"' : '') }}>
                 <a href="{{ url ('') }}"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
             </li>
-            <li {{ (Request::is('users/list') ? 'class="active"' : '') }}>
-                <a href="{{ action('UsersController@index') }}"><i class="fa fa-user fa-fw"></i> Users</a>
+            <li>
+                <a href="#"><i class="fa fa-gears fa-fw"></i> Units<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    <li {{ (Request::is('*units/unit-groups*') ? 'class="active"' : '') }}>
+                        <a href="{{ action('UnitGroupsController@index') }}"> Unit groups</a>
+                    </li>
+                    <li {{ (Request::is('*units/units*') ? 'class="active"' : '') }}>
+                        <a href="{{ action('UnitsController@index') }}"> Units</a>
+                    </li>
+                </ul>
             </li>
-            <li {{ (Request::is('units/unit-groups') ? 'class="active"' : '') }}>
-                <a href="{{ action('UnitGroupsController@index') }}"><i class="fa fa-folder-open fa-fw"></i> Unit groups</a>
+            <li>
+                <a href="#"><i class="fa fa-dropbox fa-fw"></i> Items<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    <li {{ (Request::is('*items/item-categories*') ? 'class="active"' : '') }}>
+                        <a href="{{ action('ItemCategoriesController@index') }}"> Item categories</a>
+                    </li>
+                    <li {{ (Request::is('*items/items*') ? 'class="active"' : '') }}>
+                        <a href="{{ action('ItemsController@index') }}"> Items</a>
+                    </li>
+                </ul>
             </li>
-            <li {{ (Request::is('units/units') ? 'class="active"' : '') }}>
-                <a href="{{ action('UnitsController@index') }}"><i class="fa fa-edit fa-fw"></i> Units</a>
-            </li>
-            <li {{ (Request::is('items/item-categories') ? 'class="active"' : '') }}>
-                <a href="{{ action('ItemCategoriesController@index') }}"><i class="fa fa-folder-open fa-fw"></i> Item categories</a>
-            </li>
-            <li {{ (Request::is('items/items') ? 'class="active"' : '') }}>
-                <a href="{{ action('ItemsController@index') }}"><i class="fa fa-th-list fa-fw"></i> Items</a>
-            </li>
-            <li {{ (Request::is('stock/stock-check') ? 'class="active"' : '') }}>
+            <li {{ (Request::is('*stock/stock-check*') ? 'class="active"' : '') }}>
                 <a href="{{ action('StockCheckController@index') }}"><i class="fa fa-tasks fa-fw"></i> Stock manage</a>
             </li>
-            <li {{ (Request::is('recipes/recipes') ? 'class="active"' : '') }}>
+            <li {{ (Request::is('*recipes*') ? 'class="active"' : '') }}>
                 <a href="{{ action('RecipesController@index') }}"><i class="fa fa-file-text-o fa-fw"></i> Recipes</a>
+            </li>
+            <li {{ (Request::is('*history*') ? 'class="active"' : '') }}>
+                <a href="{{ action('HistoryController@index') }}"><i class="fa fa-history fa-fw"></i> History</a>
+            </li>
+            <li {{ (Request::is('*users/list*') ? 'class="active"' : '') }}>
+                <a href="{{ action('UsersController@index') }}"><i class="fa fa-user fa-fw"></i> Users</a>
             </li>
         </ul>
     </div>

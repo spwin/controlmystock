@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use Helper;
 use App\Http\Requests;
 use App\Models\ItemUnits;
 use App\Models\Recipes;
@@ -8,6 +9,7 @@ use App\Models\Items;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 
@@ -47,7 +49,7 @@ class RecipeItemsController extends Controller {
                     'type' => $type
                 ));
             } else {
-                Session::flash('flash_message', 'It looks like you have included all possible recipes here already.');
+                Session::flash('flash_message', 'It looks like you have included all possible recipes already.');
                 return Redirect::action('RecipeItemsController@index', $recipe->id);
             }
         } else {
@@ -81,8 +83,14 @@ class RecipeItemsController extends Controller {
 	 */
     public function store(Request $request){
         $input = $request->all();
+        $recipe = Recipes::findOrFail($input['recipe_id']);
+        if($input['type'] == 'recipe'){
+            $item = Recipes::findOrFail($input['sub_recipe']);
+        } else {
+            $item = Items::findOrFail($input['item_id']);
+        }
         RecipeItems::create($input);
-
+        Helper::add(DB::getPdo()->lastInsertId(), 'added '.$input['type'].' '.$item->title.' (ID '.$recipe->id.') to recipe '.$recipe->title.' (ID '.$recipe->id.')');
         Session::flash('flash_message', $this->title.' successfully added!');
 
         return Redirect::action('RecipeItemsController@index', $request->get('recipe_id'));
@@ -130,12 +138,17 @@ class RecipeItemsController extends Controller {
     public function destroy($id)
     {
         $RecipeItems = RecipeItems::findOrFail($id);
-        $recipe_id = $RecipeItems->recipe_id;
+        $recipe = Recipes::findOrFail($RecipeItems->recipe_id);
+        if($RecipeItems->type == 'recipe'){
+            $item = Recipes::findOrFail($RecipeItems->sub_recipe);
+        } else {
+            $item = Items::findOrFail($RecipeItems->item_id);
+        }
         $RecipeItems->delete();
-
+        Helper::add($id, 'deleted '.$RecipeItems->type.' '.$item->title.' (ID '.$RecipeItems->id.') from recipe '.$recipe->title.' (ID '.$recipe->id.')');
         Session::flash('flash_message', $this->title.' successfully deleted!');
 
-        return Redirect::action('RecipeItemsController@index', ['recipe_id' => $recipe_id]);
+        return Redirect::action('RecipeItemsController@index', ['recipe_id' => $recipe->id]);
     }
 
 }

@@ -30,4 +30,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 */
 	protected $hidden = ['password', 'remember_token'];
 
+    public function history(){
+        $this->hasMany('App\Models\History', 'user_id', 'id');
+    }
+
 }

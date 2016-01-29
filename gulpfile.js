@@ -29,8 +29,11 @@ elixir(function(mix) {
         'bower_components/Chart.js/Chart.js',
         'bower_components/metisMenu/dist/metisMenu.js',
         'resources/js/sb-admin-2.js',
-        'resources/js/frontend.js'
+        'resources/js/functions.js'
     ], 'public/assets/scripts/frontend.js', './');
+    mix.scripts([
+        'resources/js/frontend.js'
+    ], 'public/assets/scripts/footer.js', './');
 });
 
 

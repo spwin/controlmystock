@@ -73,20 +73,7 @@
 @push('scripts')
 <script type="text/javascript">
     $(document).ready(function(){
-        $(function () {
-            $('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', 'Hide');
-            $('.tree li.parent_li > span').on('click', function (e) {
-                var children = $(this).parent('li.parent_li').find(' > ul > li');
-                if (children.is(":visible")) {
-                    children.hide('fast');
-                    $(this).attr('title', 'Show').find(' > i').addClass('fa-plus-circle').removeClass('fa-minus-circle');
-                } else {
-                    children.show('fast');
-                    $(this).attr('title', 'Hide').find(' > i').addClass('fa-minus-circle').removeClass('fa-plus-circle');
-                }
-                e.stopPropagation();
-            });
-        });
+        drawCategoriesTree.init('.tree');
     });
 </script>
 @stop

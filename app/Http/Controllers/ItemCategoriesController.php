@@ -4,6 +4,10 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\ItemCategories;
 use App\Models\Items;
+use App\User;
+use Helper;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\DB;
@@ -40,6 +44,7 @@ class ItemCategoriesController extends Controller {
             $input['parent_id'] = 'NULL';
         }
         DB::statement( 'INSERT INTO item_categories (parent_id, title, updated_at, created_at) VALUES ('.$input['parent_id'].', "'.$input['title'].'", NOW(), NOW())' );
+        Helper::add(DB::getPdo()->lastInsertId(), 'created new items category '.$input['title']);
         //ItemCategories::create(['parent_id' => $input['parent_id'], 'title' => $input['title']]);
         Session::flash('flash_message', $this->title.' successfully added!');
 
@@ -65,6 +70,7 @@ class ItemCategoriesController extends Controller {
         ]);
         $input = $request->all();
         DB::statement( 'UPDATE item_categories SET parent_id = '.($input['parent_id'] ? $input['parent_id'] : 'NULL').', title = "'.$input['title'].'", updated_at = NOW() WHERE id = '.$ItemCategories->id );
+        Helper::add(DB::getPdo()->lastInsertId(), 'updated items category '.$input['title']);
         Session::flash('flash_message', $this->title.' successfully updated!');
 
         return Redirect::action('ItemCategoriesController@index');
@@ -75,6 +81,7 @@ class ItemCategoriesController extends Controller {
         $ItemCategories = ItemCategories::findOrFail($id);
 
         $items = Items::where(['category_id' => $id])->get();
+        Helper::add($id, 'deleted items category '.$ItemCategories->title);
         if(count($items) > 0){
             $category = ItemCategories::where(['title' => 'Uncategorized'])->first();
             if(!$category){
@@ -90,5 +97,4 @@ class ItemCategoriesController extends Controller {
 
         return Redirect::action('ItemCategoriesController@index');
     }
-
 }

@@ -6,7 +6,7 @@
 <!--<![endif]-->
 <head>
 	<meta charset="utf-8"/>
-	<title>SB Admin v2.0 in Laravel 5</title>
+	<title>Stock Control v1.0</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta content="width=device-width, initial-scale=1" name="viewport"/>
 	<meta content="" name="description"/>
@@ -19,6 +19,7 @@
 </head>
 <body @yield('body-tag')>
 	@yield('body')
+    <script src="{{ asset("assets/scripts/footer.js") }}" type="text/javascript"></script>
     @stack('scripts')
 </body>
 </html>

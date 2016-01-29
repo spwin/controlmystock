@@ -30,11 +30,3 @@
         </div>
     </div>
 @stop
-@push('scripts')
-<script type="text/javascript">
-    function FocusOnInput(name)
-    {
-        document.getElementById(name).focus();
-    }
-</script>
-@endpush

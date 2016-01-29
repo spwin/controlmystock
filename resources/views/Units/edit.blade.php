@@ -1,5 +1,5 @@
 @extends('layouts.dashboard')
-@section('page_heading', $title.' create')
+@section('page_heading', $title.' edit')
 @section('section')
     <div class="col-sm-12">
         <a href="{{ action ('UnitsController@index') }}" class="mb-20px block"><i class="fa fa-arrow-left fa-fw"></i>Back to list</a>
@@ -61,43 +61,7 @@
 @push('scripts')
 <script type="text/javascript">
     $(document).ready(function(){
-        var defaults = <?php echo json_encode($defaults); ?>;
-        var select = $('select[name="group_id"]');
-
-        function onLoad(){
-            $('#current-unit-js').html($('input#title').val());
-            checkDefaultUnit(select.val());
-        }
-
-        function checkDefaultUnit(value){
-            $('#default-unit-js').html(defaults[value]);
-        }
-
-        function setFactor(){
-            var input = $('input#factor');
-            var factor = input.val();
-            var factor_default = $('input#factor_default').val();
-            if(factor && factor_default && parseFloat(factor_default) != 0){
-                input.val(parseFloat(factor)/parseFloat(factor_default));
-            } else {
-                input.val(1);
-            }
-            return true;
-        }
-
-        $(select).on('change', function(){
-            checkDefaultUnit($(this).val());
-        });
-
-        $('input#title').on('change', function(){
-            $('#current-unit-js').html($(this).val());
-        });
-
-        $('form#unit-create-form').on('submit', function(e){
-            setFactor();
-        });
-
-        onLoad();
+        unitsForm.init(<?php echo json_encode($defaults); ?>, $('select[name="group_id"]'), true);
     });
 </script>
 @endpush

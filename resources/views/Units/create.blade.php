@@ -62,35 +62,7 @@
 @push('scripts')
 <script type="text/javascript">
     $(document).ready(function(){
-        var defaults = <?php echo json_encode($defaults); ?>;
-        var select = $('select[name="group_id"]');
-        function checkDefaultUnit(value){
-            $('#default-unit-js').html(defaults[value]);
-        }
-        checkDefaultUnit(select.val());
-        $(select).on('change', function(){
-            checkDefaultUnit($(this).val());
-        });
-
-        $('input#title').on('change', function(){
-            $('#current-unit-js').html($(this).val());
-        });
-
-        $('form#unit-create-form').on('submit', function(e){
-            var input = $('input#factor');
-            var factor = input.val();
-            var factor_default = $('input#factor_default').val();
-            if(factor && factor_default && parseFloat(factor_default) != 0){
-                input.val(parseFloat(factor)/parseFloat(factor_default));
-            } else {
-                input.val(1);
-            }
-            return true;
-        });
+        unitsForm.init(<?php echo json_encode($defaults); ?>, $('select[name="group_id"]'), false);
     });
-    function FocusOnInput(name)
-    {
-        document.getElementById(name).focus();
-    }
 </script>
 @endpush

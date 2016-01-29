@@ -163,3 +163,4 @@ new Chart(cpolar).PolarArea(podata, { responsive: true});
                 ]
                 var cdonut1 = document.getElementById("cdonut1").getContext("2d");
                 new Chart(cdonut1).Doughnut(ddata1, { responsive: true});
+//# sourceMappingURL=footer.js.map

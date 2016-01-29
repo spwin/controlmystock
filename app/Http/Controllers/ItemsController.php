@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use Helper;
 use App\Http\Requests;
 use App\Models\Units;
 use App\Models\Items;
@@ -44,6 +45,7 @@ class ItemsController extends Controller {
         ]);
         $input = $request->all();
         $result = Items::create($input);
+        Helper::add($result->id, 'created item '.$input['title']);
         Session::flash('flash_message', $this->title.' successfully added!');
         if($result) {
             return Redirect::action('ItemUnitsController@create', $result->id);
@@ -74,6 +76,7 @@ class ItemsController extends Controller {
         ]);
         $input = $request->all();
         $Items->fill($input)->save();
+        Helper::add($Items->id, 'edited item '.$input['title']);
         Session::flash('flash_message', $this->title.' successfully added!');
 
         return Redirect::action('ItemsController@index');
@@ -83,6 +86,7 @@ class ItemsController extends Controller {
     {
         $Items = Items::findOrFail($id);
 
+        Helper::add($Items->id, 'edited item '.$Items->title);
         $Items->delete();
 
         Session::flash('flash_message', $this->title.' successfully deleted!');

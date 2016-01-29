@@ -63,46 +63,7 @@
 @push('scripts')
 <script type="text/javascript">
     $(document).ready(function(){
-        var unit_groups_list = <?php echo json_encode($unit_groups_list); ?>;
-        var unit_factors_list = <?php echo json_encode($unit_factors_list); ?>;
-        var select = $('select[name="unit_id"]');
-        var default_set = <?php echo $default_unit ? $default_unit->unit()->first()->group()->first()->id : 0 ?>;
-
-        function checkIfShowFactor(){
-            if(unit_groups_list[select.val()] == default_set){
-                $('.factor-select').find('input').attr('readonly', 'readonly');
-                var input = $('input#factor');
-                var factor_default = $('input#factor_default').val();
-                input.val(unit_factors_list[select.val()]);
-            } else {
-                $('input#factor').val('');
-                $('.factor-select').find('input').attr('readonly', false);
-            }
-        }
-
-        function checkCurrentUnit(){
-            $('#current-unit-js').html(select.find(":selected").text());
-        }
-
-        checkCurrentUnit();
-        checkIfShowFactor();
-
-        $(select).on('change', function(){
-            checkCurrentUnit();
-            checkIfShowFactor();
-        });
-
-        $('form#unit-create-form').on('submit', function(e){
-            var input = $('input#factor');
-            var factor = input.val();
-            var factor_default = $('input#factor_default').val();
-            if(factor && factor_default && parseFloat(factor_default) != 0){
-                input.val(parseFloat(factor_default)/parseFloat(factor));
-            } else {
-                input.val(1);
-            }
-            return true;
-        });
+        itemUnitsForm.init(<?php echo json_encode($unit_groups_list); ?>, <?php echo json_encode($unit_factors_list); ?>, $('select[name="unit_id"]'), <?php echo $default_unit ? $default_unit->unit()->first()->group()->first()->id : 0 ?>);
     });
 </script>
 @endpush

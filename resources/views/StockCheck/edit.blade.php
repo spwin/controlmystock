@@ -93,18 +93,7 @@
 @push('scripts')
 <script type="text/javascript">
     $(document).ready(function(){
-        var form = $('#stock-check-create-form');
-        form.on('submit', function(){
-            var count = parseFloat($('#count').val());
-            var quantity = parseFloat($('#quantity').val());
-            count = (isNaN(count) ? 1 : count);
-            $('input[name="value"]').val(count * quantity);
-            return true;
-        });
+        stockForm.init($('#stock-check-create-form'));
     });
-    function FocusOnInput(name)
-    {
-        document.getElementById(name).focus();
-    }
 </script>
 @endpush

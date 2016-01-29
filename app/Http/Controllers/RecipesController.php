@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use Helper;
 use App\Http\Requests;
 use App\Models\Recipes;
 use App\Http\Controllers\Controller;
@@ -51,6 +52,8 @@ class RecipesController extends Controller {
         $input = $request->all();
 
         $result = Recipes::create($input);
+        Helper::add($result->id, 'added recipe '.$result->title.' (ID '.$result->id.')');
+
         Session::flash('flash_message', $this->title.' successfully added!');
 
         return Redirect::action('RecipeItemsController@index', $result->id);
@@ -99,6 +102,7 @@ class RecipesController extends Controller {
         $input = $request->all();
 
         $Recipe->fill($input)->save();
+        Helper::add($id, 'edited recipe '.$Recipe->title.' (ID '.$Recipe->id.')');
 
         Session::flash('flash_message', $this->title.' successfully updated!');
 
@@ -116,6 +120,7 @@ class RecipesController extends Controller {
         $Recipe = Recipes::findOrFail($id);
 
         Session::flash('flash_message', $this->title.' successfully deleted!');
+        Helper::add($id, 'deleted recipe '.$Recipe->title.' (ID '.$Recipe->id.')');
         $Recipe->delete();
 
         return Redirect::action('RecipesController@index');

@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use Helper;
 use App\Http\Requests;
 use App\Models\Units;
 use App\Models\UnitGroups;
@@ -47,13 +48,17 @@ class UnitsController extends Controller {
             'title' => 'required|unique:units|max:100'
         ]);
         $input = $request->all();
+        $group = UnitGroups::findOrFail($input['group_id']);
         if(array_key_exists('default', $input)){
             DB::table('units')->where(['default' => 1, 'group_id' => $input['group_id']])->update(['default' => 0]);
             $input['default'] = 1;
             Units::create($input);
+            Helper::add(DB::getPdo()->lastInsertId(), 'added new unit '.$input['title'].' (ID '.DB::getPdo()->lastInsertId().')');
+            Helper::add(DB::getPdo()->lastInsertId(), 'changed default unit to '.$input['title'].' (ID '.DB::getPdo()->lastInsertId().') in group '.$group->title.' (ID '.$group->id.')');
             Units::where(['group_id' => $input['group_id']])->update(['factor' => DB::raw('factor/'.$input['factor'])]);
         } else {
             Units::create($input);
+            Helper::add(DB::getPdo()->lastInsertId(), 'added new unit '.$input['title'].' (ID '.DB::getPdo()->lastInsertId().')');
         }
         Session::flash('flash_message', $this->title.' successfully added!');
 
@@ -77,9 +82,12 @@ class UnitsController extends Controller {
             'title' => 'required|max:100'
         ]);
         $input = $request->all();
+        Helper::add($id, 'edited unit '.$Units->title.' (ID '.$Units->id.')');
         if(array_key_exists('default', $input)){
+            $group = UnitGroups::findOrFail($input['group_id']);
             Units::where(['default' => 1, 'group_id' => $input['group_id']])->where('id', '!=', $id)->update(['default' => 0]);
             Units::where(['group_id' => $input['group_id']])->update(['factor' => DB::raw('factor/'.$input['factor'])]);
+            Helper::add($id, 'changed default unit to '.$Units->title.' (ID '.$Units->id.') in group '.$group->title.' (ID '.$group->id.')');
             $input['default'] = 1;
         }
         $Units->fill($input)->save();
@@ -94,11 +102,14 @@ class UnitsController extends Controller {
         if($Units->disable_delete){
             Session::flash('flash_message', 'This '.$this->title.' is not deletable!');
         } else {
+            Helper::add($id, 'deleted unit '.$Units->title.' (ID '.$Units->id.')');
             if($Units->default){
                 $first = Units::where('id', '!=', $id)->where(['group_id' => $Units->group_id])->first();
                 if($first){
                     $first->update(['default' => 1]);
+                    $group = UnitGroups::findOrFail($first->group_id);
                     Units::where(['group_id' => $Units->group_id])->update(['factor' => DB::raw('factor/'.$first->factor)]);
+                    Helper::add($id, 'changed default unit to '.$Units->title.' (ID '.$Units->id.') in group '.$group->title.' (ID '.$group->id.')');
                 }
             }
             $Units->delete();

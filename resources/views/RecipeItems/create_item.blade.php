@@ -48,25 +48,7 @@
 @push('scripts')
 <script type="text/javascript">
     $(document).ready(function(){
-        var form = $('#recipe-add-item-form');
-        var select = $('select#item_id');
-        var units_select = $('select#units');
-        var value = $('input#value');
-        var items_units = <?php echo json_encode($items_units['list']); ?>;
-        var units = <?php echo json_encode($items_units['factors']); ?>;
-
-        select.on('change', function(){
-            units_select.html('');
-            var select_population = items_units[$(this).val()];
-            for(key in select_population){
-                units_select.append('<option value="'+select_population[key]['id']+'">'+select_population[key]['title']+'</option>');
-            }
-        });
-
-        form.on('submit', function(){
-            value.val(value.val()*units[units_select.val()]);
-            return true;
-        });
+        recipeItemForm.init($('#recipe-add-item-form'), $('select#item_id'), $('select#units'), $('input#value'), <?php echo json_encode($items_units['list']); ?>, <?php echo json_encode($items_units['factors']); ?>);
     });
 </script>
 @endpush

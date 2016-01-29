@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Helper;
 use App\Models\UnitGroups;
 use App\Http\Requests;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
@@ -34,6 +35,7 @@ class UnitGroupsController extends Controller
         $input = $request->all();
 
         UnitGroups::create($input);
+        Helper::add(DB::getPdo()->lastInsertId(), 'added new unit group '.$input['title'].' (ID '.DB::getPdo()->lastInsertId().')');
         Session::flash('flash_message', $this->title.' successfully added!');
 
         return Redirect::action('UnitGroupsController@index');
@@ -59,7 +61,7 @@ class UnitGroupsController extends Controller
         $input = $request->all();
 
         $UnitGroup->fill($input)->save();
-
+        Helper::add($id, 'edited unit group '.$UnitGroup->title.' (ID '.$id.')');
         Session::flash('flash_message', $this->title.' successfully updated!');
 
         return Redirect::action('UnitGroupsController@index');
@@ -72,6 +74,7 @@ class UnitGroupsController extends Controller
             Session::flash('flash_message', 'This '.$this->title.' is not deletable!');
         } else {
             $UnitGroup->delete();
+            Helper::add($id, 'deleted unit group '.$UnitGroup->title.' (ID '.$id.')');
             Session::flash('flash_message', $this->title.' successfully deleted!');
         }
 

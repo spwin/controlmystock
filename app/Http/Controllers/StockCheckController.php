@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use Helper;
 use App\Http\Requests;
 use App\Models\Items;
 use App\Models\ItemUnits;
@@ -88,6 +89,7 @@ class StockCheckController extends Controller {
             'after' => $new_stock
         ];
         StockCheck::create($data);
+        Helper::add(DB::getPdo()->lastInsertId(), $input['action'].'ed stock for '.$item->title.' (ID '.$item->id.')'.' with value '.$data['value'].' '.$unit->unit()->first()->title.($default_unit->id != $input['unit_id'] ? ' ('.$value.' '.$default_unit->unit()->first()->title.')' : ''));
         $item->update(['stock' => $new_stock]);
         $item->save();
         return Redirect::action('StockCheckController@edit', $item->id);

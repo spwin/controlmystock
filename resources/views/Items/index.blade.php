@@ -71,17 +71,8 @@
 @stop
 @push('scripts')
 <script type="text/javascript">
-    $(function()
-    {
-        var search = $('#q');
-        search.autocomplete({
-            source: '{{ action('StockCheckController@autocomplete') }}',
-            delay: 0
-        });
+    $(document).ready(function(){
+        searchAutocomplete.init($('#q'), '{{ action('StockCheckController@autocomplete') }}');
     });
-    function FocusOnInput(name)
-    {
-        document.getElementById(name).focus();
-    }
 </script>
 @endpush

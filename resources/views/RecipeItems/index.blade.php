@@ -33,7 +33,7 @@
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->type == 'recipe' ? $item->subrecipe()->first()->title : $item->item()->first()->title }}</td>
                                     <td>{{ $item->value }} {{ $item->item()->first() ? $item->item()->first()->units()->where(['default' => 1])->first()->unit()->first()->title : ' of this' }}</td>
-                                    <td>{{ $item->type == 'item' ? '<a href="'.action('ItemsController@edit', $item->item()->first()->id).'" class="btn btn-primary btn-xs">show '.$item->type.'</a>' : '<a href="'.action('RecipeItemsController@index', $item->subrecipe()->first()->id).'" class="btn btn-warning btn-xs">show '.$item->type.'</a>' }}</td>
+                                    <td>{{ $item->type == 'item' ? '<a href="'.action('ItemUnitsController@index', $item->item()->first()->id).'" class="btn btn-primary btn-xs">show '.$item->type.'</a>' : '<a href="'.action('RecipeItemsController@index', $item->subrecipe()->first()->id).'" class="btn btn-warning btn-xs">show '.$item->type.'</a>' }}</td>
                                     <td>
                                         {{ Form::open([
                                         'method' => 'DELETE',
