@@ -36,16 +36,19 @@
                     </li>
                 </ul>
             </li>
+            <li {{ (Request::is('*recipes*') ? 'class="active"' : '') }}>
+                <a href="{{ action('RecipesController@index') }}"><i class="fa fa-file-text-o fa-fw"></i> Recipes</a>
+            </li>
             <li {{ (Request::is('*stock/stock-check*') ? 'class="active"' : '') }}>
                 <a href="{{ action('StockCheckController@index') }}"><i class="fa fa-tasks fa-fw"></i> Stock manage</a>
             </li>
-            <li {{ (Request::is('*recipes*') ? 'class="active"' : '') }}>
-                <a href="{{ action('RecipesController@index') }}"><i class="fa fa-file-text-o fa-fw"></i> Recipes</a>
+            <li {{ (Request::is('*stock-periods*') ? 'class="active"' : '') }}>
+                <a href="{{ action('StockPeriodsController@index') }}"><i class="fa fa-calendar fa-fw"></i> Periods</a>
             </li>
             <li {{ (Request::is('*history*') ? 'class="active"' : '') }}>
                 <a href="{{ action('HistoryController@index') }}"><i class="fa fa-history fa-fw"></i> History</a>
             </li>
-            <li {{ (Request::is('*users/list*') ? 'class="active"' : '') }}>
+            <li {{ (Request::is('*users*') ? 'class="active"' : '') }}>
                 <a href="{{ action('UsersController@index') }}"><i class="fa fa-user fa-fw"></i> Users</a>
             </li>
         </ul>
