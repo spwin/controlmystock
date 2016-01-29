@@ -18,7 +18,6 @@ class CreateItemsTable extends Migration {
             $table->string('title', 100);
             $table->integer('category_id')->unsigned()->nullable();
             $table->foreign('category_id')->references('id')->on('item_categories')->onDelete('set null');
-            $table->float('stock', null, null);
             $table->timestamps();
 		});
 	}
