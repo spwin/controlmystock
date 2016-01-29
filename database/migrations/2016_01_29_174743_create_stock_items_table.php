@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateStockChecksTable extends Migration {
+class CreateStockItemsTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,19 +12,13 @@ class CreateStockChecksTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('stock_checks', function(Blueprint $table)
+		Schema::create('stock_items', function(Blueprint $table)
 		{
 			$table->increments('id');
             $table->integer('item_id')->unsigned();
             $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade');
-            $table->integer('unit_id')->unsigned()->nullable();
-            $table->foreign('unit_id')->references('id')->on('units')->onDelete('set null');
             $table->integer('stock_period_id')->unsigned()->nullable();
             $table->foreign('stock_period_id')->references('id')->on('stock_periods')->onDelete('set null');
-            $table->enum('action', ['add', 'reduce', 'change']);
-            $table->float('before', null, null);
-            $table->float('after', null, null);
-            $table->float('value', null, null);
 			$table->timestamps();
 		});
 	}
@@ -36,7 +30,7 @@ class CreateStockChecksTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('stock_checks');
+		Schema::drop('stock_items');
 	}
 
 }
