@@ -9,7 +9,7 @@
             </div>
         @endif
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-lg-6">
                     {{ Form::open([
                     'action' => ['ItemsController@index'],
                     'method' => 'GET',
@@ -26,7 +26,7 @@
         {{ $search ? '<h3>'.(count($items) > 0 ? count($items).' ' : 'no ').'results for "'.$search.'" <a href="'.action('ItemsController@index').'">(clear)</a></h3>' : '' }}
         @if(count($items) > 0)
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-lg-6">
                 @section ('table_panel_title', $title)
                 @section ('table_panel_body')
                         <table class="table">

@@ -8,7 +8,7 @@
             </div>
         @endif
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-lg-6">
                     {{ Form::open([
                     'action' => ['RecipesController@index'],
                     'method' => 'GET',
@@ -25,7 +25,7 @@
         {{ $search ? '<h3>'.(count($recipes) > 0 ? count($recipes).' ' : 'no ').'results for "'.$search.'" <a href="'.action('RecipesController@index').'">(clear)</a></h3>' : '' }}
         @if(count($recipes) > 0)
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-lg-6">
                 @section ('table_panel_title', $title)
                 @section ('table_panel_body')
                         <table class="table">

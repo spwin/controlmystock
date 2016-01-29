@@ -10,7 +10,7 @@
         @endif
         <a href="{{ action ('StockCheckController@index') }}" class="mb-20px block"><i class="fa fa-arrow-left fa-fw"></i>Back to list</a>
         <div class="row">
-            <div class="col-sm-10">
+            <div class="col-lg-10">
                 @if($default)
                     <div class="panel panel-green" style="max-width: 600px;">
                         <div class="panel-heading">
@@ -59,7 +59,7 @@
         </div>
         @if($default)
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-lg-6">
                 @section ('table_panel_title', 'Last 10 stock changes')
                 @section ('table_panel_body')
                     <table class="table">
