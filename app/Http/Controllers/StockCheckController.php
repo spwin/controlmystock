@@ -19,17 +19,23 @@ class StockCheckController extends Controller {
     private $title = 'Stock Check';
 
     public function index(){
-        $search = Input::get('q');
-        $items = $search ? Items::where('title', 'LIKE', '%'.$search.'%')->get() : Items::all();
-        if(count($items) == 1 && $search){
-            return redirect()->action('StockCheckController@edit', ['item_id' => $items->first()->id]);
+        $currentPeriodId = Helper::currentPeriodId();
+        if($currentPeriodId) {
+            $search = Input::get('q');
+            $items = $search ? Items::where('title', 'LIKE', '%' . $search . '%')->get() : Items::all();
+            if (count($items) == 1 && $search) {
+                return redirect()->action('StockCheckController@edit', ['item_id' => $items->first()->id]);
+            }
+            return view('StockCheck.index')->with(array(
+                'title' => $this->title,
+                'items' => $search ? Items::where('title', 'LIKE', '%' . $search . '%')->get() : Items::all(),
+                'item_list' => Items::lists('title'),
+                'search' => $search
+            ));
+        } else {
+            Session::flash('flash_message', 'You need to start a period first!');
+            return Redirect::action('StockPeriodsController@index');
         }
-        return view('StockCheck.index')->with(array(
-            'title' => $this->title,
-            'items' => $search ? Items::where('title', 'LIKE', '%'.$search.'%')->get() : Items::all(),
-            'item_list' => Items::lists('title'),
-            'search' => $search
-        ));
     }
 
     public function autocomplete(){

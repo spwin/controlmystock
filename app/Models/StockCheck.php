@@ -10,7 +10,8 @@ class StockCheck extends Model {
         'value',
         'after',
         'before',
-        'action'
+        'action',
+        'stock_period_id'
     ];
 
     public function item() {
@@ -19,6 +20,10 @@ class StockCheck extends Model {
 
     public function unit() {
         return $this->hasone('App\Models\Units', 'id', 'unit_id');
+    }
+
+    public function period() {
+        return $this->hasOne('App\Models\StockPeriods', 'id', 'stock_period_id');
     }
 
 }

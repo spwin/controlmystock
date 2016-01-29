@@ -3,5 +3,14 @@ label,
 .checkbox label {
   font-weight: 300;
 }
+.period-info .nav li {
+  border: none;
+  display: block;
+  padding: 10px 15px;
+  text-decoration: none;
+}
+.period-info .nav li span {
+  display: block;
+}
 
 /*# sourceMappingURL=app.css.map */

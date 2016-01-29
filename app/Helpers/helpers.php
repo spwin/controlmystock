@@ -20,4 +20,9 @@ class Helper {
         ]);
     }
 
+    public static function currentPeriodId() {
+        $period = \App\Models\StockPeriods::whereNull('date_to')->get();
+        return count($period) > 0 ? $period->first()->id : 0;
+    }
+
 }
