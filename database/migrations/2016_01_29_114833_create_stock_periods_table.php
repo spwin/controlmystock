@@ -16,7 +16,7 @@ class CreateStockPeriodsTable extends Migration {
 		{
 			$table->increments('id');
             $table->dateTime('date_from');
-            $table->dateTime('date_to');
+            $table->dateTime('date_to')->nullable();
             $table->unsignedInteger('number');
 			$table->timestamps();
 		});
