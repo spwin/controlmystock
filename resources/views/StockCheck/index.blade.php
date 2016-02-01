@@ -22,7 +22,6 @@
                 {{ Form::close() }}
             </div>
         </div>
-            <a href="{{ action ('StockCheckController@modificate') }}" class="mb-20px block">Modificate database</a>
         {{ $search ? '<h3>'.(count($items) > 0 ? count($items).' ' : 'no ').'results for "'.$search.'" <a href="'.action('StockCheckController@index').'">(clear)</a></h3>' : '' }}
         @if(count($items) > 0)
         <div class="row">
