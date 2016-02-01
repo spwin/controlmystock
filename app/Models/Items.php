@@ -18,8 +18,12 @@ class Items extends Model {
         return $this->hasMany('App\Models\ItemUnits', 'item_id', 'id');
     }
 
-    public function stock() {
+    public function stockCheck() {
         return $this->hasMany('App\Models\StockCheck', 'item_id', 'id');
+    }
+
+    public function stock() {
+        return$this->hasMany('App\Models\StockItem', 'item_id', 'id');
     }
 
     public function recipes() {

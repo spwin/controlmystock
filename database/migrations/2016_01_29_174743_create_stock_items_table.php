@@ -19,6 +19,7 @@ class CreateStockItemsTable extends Migration {
             $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade');
             $table->integer('stock_period_id')->unsigned()->nullable();
             $table->foreign('stock_period_id')->references('id')->on('stock_periods')->onDelete('set null');
+			$table->float('stock', null, null);
 			$table->timestamps();
 		});
 	}

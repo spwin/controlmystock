@@ -22,6 +22,7 @@
                 {{ Form::close() }}
             </div>
         </div>
+            <a href="{{ action ('StockCheckController@modificate') }}" class="mb-20px block">Modificate database</a>
         {{ $search ? '<h3>'.(count($items) > 0 ? count($items).' ' : 'no ').'results for "'.$search.'" <a href="'.action('StockCheckController@index').'">(clear)</a></h3>' : '' }}
         @if(count($items) > 0)
         <div class="row">
@@ -33,7 +34,8 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Item</th>
-                                <th>Quantity</th>
+                                <th>Last period</th>
+                                <th>This period</th>
                                 <th>Units</th>
                                 <th>Last modified</th>
                                 <th>History</th>
@@ -45,7 +47,8 @@
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td><a href="{{ action('ItemsController@edit', $item->id) }}">{{ $item->title }}</a></td>
-                                    <td>{{ $item->stock.' '.($item->units()->where(['default' => 1])->first() ? $item->units()->where(['default' => 1])->first()->unit()->first()->title : '') }}</td>
+                                    <td>{{ ($item->stock()->where(['stock_period_id' => $previous])->first() ? $item->stock()->where(['stock_period_id' => $previous])->first()->stock : '0').' '.($item->units()->where(['default' => 1])->first() ? $item->units()->where(['default' => 1])->first()->unit()->first()->title : '') }}</td>
+                                    <td>{{ ($item->stock()->where(['stock_period_id' => $period])->first() ? $item->stock()->where(['stock_period_id' => $period])->first()->stock : '0').' '.($item->units()->where(['default' => 1])->first() ? $item->units()->where(['default' => 1])->first()->unit()->first()->title : '') }}</td>
                                     <td><a href="{{ action('ItemUnitsController@index', $item->id) }}" class="btn btn-primary btn-xs">Manage</a> {{ $item->units()->where(['default' => 1])->first() ? $item->units()->where(['default' => 1])->first()->unit()->first()->title : '' }}</td>
                                     <td>{{ $item->stock()->orderBy('created_at', 'DESC')->first() ? $item->stock()->orderBy('created_at', 'DESC')->first()->created_at : '' }}</td>
                                     <td><a href="{{ action('StockCheckController@history', $item->id) }}" class="btn btn-xs btn-warning">Item history</a></td>

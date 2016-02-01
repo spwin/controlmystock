@@ -19,8 +19,6 @@ class CreateStockChecksTable extends Migration {
             $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade');
             $table->integer('unit_id')->unsigned()->nullable();
             $table->foreign('unit_id')->references('id')->on('units')->onDelete('set null');
-            $table->integer('stock_period_id')->unsigned()->nullable();
-            $table->foreign('stock_period_id')->references('id')->on('stock_periods')->onDelete('set null');
             $table->enum('action', ['add', 'reduce', 'change']);
             $table->float('before', null, null);
             $table->float('after', null, null);

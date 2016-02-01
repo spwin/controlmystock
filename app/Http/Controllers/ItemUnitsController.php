@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use App\Models\RecipeItems;
+use App\Models\StockItem;
 use Helper;
 use App\Http\Requests;
 use App\Models\Items;
@@ -49,7 +50,7 @@ class ItemUnitsController extends Controller {
             Helper::add(DB::getPdo()->lastInsertId(), 'added unit '.$unit->title.' for item '.$item->title.' (ID '.$input['item_id'].')');
             Helper::add(DB::getPdo()->lastInsertId(), 'changed item '.$item->title.' (ID '.$input['item_id'].') default unit to '.$unit->title);
             ItemUnits::where(['item_id' => $input['item_id']])->update(['factor' => DB::raw('factor/'.$input['factor'])]);
-            Items::where(['id' => $input['item_id']])->update(['stock' => DB::raw('stock/'.$input['factor'])]);
+            StockItem::where(['item_id' => $input['item_id']])->update(['stock' => DB::raw('stock/'.$input['factor'])]);
             RecipeItems::where(['item_id' => $input['item_id']])->update(['value' => DB::raw('value/'.$input['factor'])]);
             StockCheck::where(['item_id' => $input['item_id']])->update(['before' => DB::raw('`before` / '.$input['factor']), 'after' => DB::raw('`after` / '.$input['factor'])]);
         } else {
@@ -81,7 +82,7 @@ class ItemUnitsController extends Controller {
             ItemUnits::where(['default' => 1, 'item_id' => $input['item_id']])->where('id', '!=', $id)->update(['default' => 0]);
             ItemUnits::where(['item_id' => $input['item_id']])->update(['factor' => DB::raw('factor/'.$input['factor'])]);
             Helper::add($id, 'changed item '.$item->title.'(ID '.$input['item_id'].') default unit to '.$Units->title);
-            Items::where(['id' => $input['item_id']])->update(['stock' => DB::raw('stock/'.$input['factor'])]);
+            StockItem::where(['item_id' => $input['item_id']])->update(['stock' => DB::raw('stock/'.$input['factor'])]);
             RecipeItems::where(['item_id' => $input['item_id']])->update(['value' => DB::raw('value/'.$input['factor'])]);
             StockCheck::where(['item_id' => $input['item_id']])->update(['before' => DB::raw('`before` / '.$input['factor']), 'after' => DB::raw('`after` / '.$input['factor'])]);
             $input['default'] = 1;
@@ -101,7 +102,7 @@ class ItemUnitsController extends Controller {
             if($first){
                 $first->update(['default' => 1]);
                 ItemUnits::where(['item_id' => $ItemUnits->item_id])->update(['factor' => DB::raw('factor/'.$first->factor)]);
-                Items::where(['id' => $ItemUnits->item_id])->update(['stock' => DB::raw('stock/'.$first->factor)]);
+                StockItem::where(['item_id' => $ItemUnits->item_id])->update(['stock' => DB::raw('stock/'.$first->factor)]);
                 RecipeItems::where(['item_id' => $ItemUnits->item_id])->update(['value' => DB::raw('value/'.$first->factor)]);
                 StockCheck::where(['item_id' => $ItemUnits->item_id])->update(['before' => DB::raw('`before` / '.$first->factor), 'after' => DB::raw('`after` / '.$first->factor)]);
                 Helper::add($first->id, 'changed item '.$ItemUnits->item()->first()->title.' (ID '.$ItemUnits->item()->first()->id.') default unit to '.$first->unit()->first()->title);
@@ -121,7 +122,7 @@ class ItemUnitsController extends Controller {
         ItemUnits::where('item_id', $itemUnit->item_id)->update(['default' => 0]);
         ItemUnits::where('id', $id)->update(['default' => 1]);
         ItemUnits::where(['item_id' => $itemUnit->item_id])->update(['factor' => DB::raw('factor/'.$itemUnit->factor)]);
-        Items::where(['id' => $itemUnit->item_id])->update(['stock' => DB::raw('stock/'.$itemUnit->factor)]);
+        StockItem::where(['item_id' => $itemUnit->item_id])->update(['stock' => DB::raw('stock/'.$itemUnit->factor)]);
         RecipeItems::where(['item_id' => $itemUnit->item_id])->update(['value' => DB::raw('value/'.$itemUnit->factor)]);
         StockCheck::where(['item_id' => $itemUnit->item_id])->update(['before' => DB::raw('`before` / '.$itemUnit->factor), 'after' => DB::raw('`after` / '.$itemUnit->factor)]);
         return Redirect::action('ItemUnitsController@index', array('item_id' => $itemUnit->item_id));

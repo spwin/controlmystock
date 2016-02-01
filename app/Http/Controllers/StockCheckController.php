@@ -1,5 +1,7 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\StockItem;
+use App\Models\StockPeriods;
 use Helper;
 use App\Http\Requests;
 use App\Models\Items;
@@ -26,11 +28,14 @@ class StockCheckController extends Controller {
             if (count($items) == 1 && $search) {
                 return redirect()->action('StockCheckController@edit', ['item_id' => $items->first()->id]);
             }
+            $last_period = StockPeriods::where(['number' => StockPeriods::findOrFail($currentPeriodId)->number - 1])->get();
             return view('StockCheck.index')->with(array(
                 'title' => $this->title,
                 'items' => $search ? Items::where('title', 'LIKE', '%' . $search . '%')->get() : Items::all(),
                 'item_list' => Items::lists('title'),
-                'search' => $search
+                'search' => $search,
+                'period' => $currentPeriodId,
+                'previous' => count($last_period) > 0 ? $last_period->first()->id : 0
             ));
         } else {
             Session::flash('flash_message', 'You need to start a period first!');
@@ -80,25 +85,53 @@ class StockCheckController extends Controller {
         if($default_unit->id != $input['unit_id']){
             $value = $unit->factor * $value;
         }
-        switch($input['action']){
-            case 'add' : $new_stock = $item->stock + $value; break;
-            case 'reduce' : $new_stock = $item->stock - $value; break;
-            case 'change' : $new_stock = $value; break;
-            default: $new_stock = $item->stock + $value; break;
+        $stockItem = StockItem::where(['stock_period_id' => Helper::currentPeriodId(), 'item_id' => $item->id])->get();
+        if(count($stockItem) == 0){
+            $stockItem = StockItem::create(['stock_period_id' => Helper::currentPeriodId(), 'item_id' => $item->id, 'stock' => 0]);
+        } else {
+            $stockItem = $stockItem->first();
+        }
+        switch ($input['action']) {
+            case 'add' :
+                $new_stock = $stockItem->stock + $value;
+                break;
+            case 'reduce' :
+                $new_stock = $stockItem->stock - $value;
+                break;
+            case 'change' :
+                $new_stock = $value;
+                break;
+            default:
+                $new_stock = $item->stock + $value;
+                break;
         }
         $data = [
             'item_id' => $item->id,
             'unit_id' => $unit->unit()->first()->id,
             'value' => $input['value'],
             'action' => $input['action'],
-            'before' => $item->stock,
-            'after' => $new_stock
+            'before' => $stockItem->stock,
+            'after' => $new_stock,
+            'stock_item_id' => $stockItem->id
         ];
+        $stockItem->update(['stock' => $new_stock]);
+        $stockItem->save();
         StockCheck::create($data);
         Helper::add(DB::getPdo()->lastInsertId(), $input['action'].'ed stock for '.$item->title.' (ID '.$item->id.')'.' with value '.$data['value'].' '.$unit->unit()->first()->title.($default_unit->id != $input['unit_id'] ? ' ('.$value.' '.$default_unit->unit()->first()->title.')' : ''));
-        $item->update(['stock' => $new_stock]);
-        $item->save();
         return Redirect::action('StockCheckController@edit', $item->id);
+    }
+
+    public function modificate(){
+        $items = Items::all();
+        foreach($items as $item){
+            $data = [
+                'item_id' => $item->id,
+                'stock_period_id' => Helper::currentPeriodId(),
+                'stock' => $item->stock
+            ];
+            StockItem::create($data);
+        }
+        return Redirect::action('StockCheckController@index');
     }
 
     public function edit($id)
@@ -123,7 +156,8 @@ class StockCheckController extends Controller {
             'other' => $other,
             'actions' => $actions,
             'other_units' => $other_units,
-            'stock' => StockCheck::where(['item_id' => $id])->orderBy('created_at', 'DESC')->get()
+            'period' => Helper::currentPeriodId(),
+            'stock' => StockCheck::join('stock_items', 'stock_checks.stock_item_id', '=', 'stock_items.id')->where(['stock_checks.item_id' => $id, 'stock_items.stock_period_id' => Helper::currentPeriodId()])->orderBy('stock_checks.created_at', 'DESC')->get()
         ));
     }
 

@@ -28,6 +28,7 @@ Route::group(['prefix' => 'stock', 'middleware' => 'auth'], function () {
     Route::resource('stock-check', 'StockCheckController');
     Route::get('autocomplete', 'StockCheckController@autocomplete');
     Route::get('history/{item}', 'StockCheckController@history');
+    Route::get('modificate', 'StockCheckController@modificate');
 
 });
 

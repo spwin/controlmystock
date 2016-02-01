@@ -19,11 +19,11 @@
                                     <i class="fa fa-tasks fa-5x"></i><div class="huge inline-block ml-10px" style="position: absolute;">Stock:</div>
                                 </div>
                                 <div class="col-xs-7 text-right">
-                                    <div class="huge">{{ $item->stock.' '.$default->unit()->first()->title }}</div>
+                                    <div class="huge">{{ ($item->stock()->where(['stock_period_id' => $period])->first() ? $item->stock()->where(['stock_period_id' => $period])->first()->stock : '0').' '.$default->unit()->first()->title }}</div>
                                     @if($other)
                                         <?php $other_array = []; ?>
                                         @foreach($item->units()->where(['default' => 0])->get() as $unit)
-                                            <?php $other_array[] = ($item->stock * ($default->factor / $unit->factor)) . ' ' .$unit->unit()->first()->title ?>
+                                            <?php $other_array[] = (($item->stock()->where(['stock_period_id' => $period])->first() ? $item->stock()->where(['stock_period_id' => $period])->first()->stock : '0') * ($default->factor / $unit->factor)) . ' ' .$unit->unit()->first()->title ?>
                                         @endforeach
                                         {{ '( '.implode(', ', $other_array).' )' }}
                                     @endif
