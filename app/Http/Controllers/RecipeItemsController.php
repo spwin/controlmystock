@@ -60,7 +60,7 @@ class RecipeItemsController extends Controller {
                 $items_units['php_list'][$item->item()->first()->id][$item->id] = $item->unit()->first()->title;
                 $items_units['factors'][$item->id] = $item->factor;
             }
-            $select_items = Items::whereNotIn('id', RecipeItems::where(['recipe_id' => $recipe_id, 'type' => $type])->lists('item_id'))->lists('title', 'id');
+            $select_items = Items::whereNotIn('id', RecipeItems::where(['recipe_id' => $recipe_id, 'type' => $type])->lists('item_id'))->orderBy('title', 'ASC')->lists('title', 'id');
             if($select_items) {
                 return view('RecipeItems.create_item')->with(array(
                     'title' => $this->title,

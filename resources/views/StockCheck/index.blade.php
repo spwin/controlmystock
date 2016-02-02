@@ -26,7 +26,7 @@
         @if(count($items) > 0)
         <div class="row">
             <div class="col-lg-6">
-                @section ('table_panel_title', 'Items list')
+                @section ('table_panel_title', 'Last 10 updated items stock')
                 @section ('table_panel_body')
                         <table class="table">
                             <thead>
