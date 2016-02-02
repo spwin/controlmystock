@@ -9,6 +9,18 @@
             </div>
         @endif
         <a href="{{ action ('StockCheckController@index') }}" class="mb-20px block"><i class="fa fa-arrow-left fa-fw"></i>Back to list</a>
+            {{ Form::open([
+                'action' => array('StockCheckController@edit', $item->id),
+                'class' => 'pure-form pure-form-aligned',
+                'role' => 'form',
+                'method' => 'get',
+                'id' => 'stock-check-change-period'
+                ]) }}
+            <div class="form-group">
+                {{ Form::select('stock_period', $stocks_list, $period,  ['class' => 'form-control inline-block', 'style' => 'width: 400px;']) }}
+                @include('widgets.button', array('class'=>'btn btn-warning ml-10px', 'value'=>'Change period', 'type' => 'submit'))
+            </div>
+            {{ Form::close() }}
         <div class="row">
             <div class="col-lg-10">
                 @if($default)
@@ -49,6 +61,7 @@
                     </div>
                     {{ Form::hidden('value', null) }}
                     {{ Form::hidden('item_id', $item->id) }}
+                    {{ Form::hidden('stock_period_id', $period) }}
                     {{ Form::close() }}
                 @else
                     <h2>{{ $item->title }}</h2>

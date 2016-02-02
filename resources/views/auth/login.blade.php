@@ -35,8 +35,6 @@
 	<div class="row">
 		<div class="col-md-8 col-md-offset-2">
 			<div class="panel panel-default">
-				<h1 style="color: red;">Important for Kasia and Viktorija!</h1>
-				@include('widgets.alert', array('class'=>'warning', 'dismissable'=>true, 'message'=> 'I started a new stock period on 00:26 monday. You dont need to create new period, what you need is just click on Stock manage -> Edit stock or find for item and write current stock for this period.', 'icon'=> 'check'))
 				<div class="panel-heading">Login</div>
 				<div class="panel-body">
 					@if (count($errors) > 0)

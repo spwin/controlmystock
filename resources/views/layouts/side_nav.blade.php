@@ -42,6 +42,17 @@
             <li {{ (Request::is('*stock/stock-check*') ? 'class="active"' : '') }}>
                 <a href="{{ action('StockCheckController@index') }}"><i class="fa fa-tasks fa-fw"></i> Stock manage</a>
             </li>
+            <li>
+                <a href="#"><i class="fa fa-shopping-cart fa-fw"></i> Purchases<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    <li {{ (Request::is('*purchases/suppliers*') ? 'class="active"' : '') }}>
+                        <a href="{{ action('SuppliersController@index') }}"> Suppliers</a>
+                    </li>
+                    <li {{ (Request::is('*purchases/list*') ? 'class="active"' : '') }}>
+                        <a href="{{ action('PurchasesController@index') }}"> Purchases</a>
+                    </li>
+                </ul>
+            </li>
             <li {{ (Request::is('*stock-periods*') ? 'class="active"' : '') }}>
                 <a href="{{ action('StockPeriodsController@index') }}"><i class="fa fa-calendar fa-fw"></i> Periods</a>
             </li>

@@ -52,6 +52,10 @@ Route::group(['prefix' => 'stock-periods', 'middleware' => 'auth'], function () 
     Route::resource('list', 'StockPeriodsController');
     Route::get('close/{id}', ['uses' =>'StockPeriodsController@close']);
 });
+Route::group(['prefix' => 'purchases', 'middleware' => 'auth'], function () {
+    Route::resource('suppliers', 'SuppliersController');
+    Route::resource('list', 'PurchasesController');
+});
 /*Route::group(['prefix' => 'unit-groups'], function () {
     Route::get('/', 'UnitGroupsController@index');
     Route::get('create', 'UnitGroupsController@create');
