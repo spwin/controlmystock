@@ -31,9 +31,10 @@
                                     <td>{{ $item->number }}</td>
                                     <td>{{ $item->date_created }}</td>
                                     <td>{{ $item->date_delivered }}</td>
-                                    <th>{{ $item->supplier()->first() ? $item->supplier()->first()->title : '' }}</th>
-                                    <th>Pending</th>
+                                    <td>{{ $item->supplier()->first() ? $item->supplier()->first()->title : '' }}</td>
+                                    <td>{{ $item->status ? '<span class="btn-success btn-xs no-hover">Paid</span>' : '<span class="btn-warning btn-xs no-hover">Pending</span>' }}</td>
                                     <td>
+                                        <a href="{{ action('PurchasesController@edit', $item->id) }}" class="btn btn-xs btn-primary">Manage Items</a>
                                         <a href="{{ action('PurchasesController@edit', $item->id) }}" class="btn btn-xs btn-success">Edit</a>
                                         {{ Form::open([
                                         'method' => 'DELETE',

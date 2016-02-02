@@ -9,4 +9,8 @@ class StockPeriods extends Model {
 	public function stockItems(){
 		return $this->hasMany('App\Models\StockItem', 'stock_period_id', 'id');
 	}
+
+    public function purchases(){
+        return $this->hasMany('App\Models\Purchases', 'stock_period_id', 'id');
+    }
 }

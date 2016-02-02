@@ -37,15 +37,16 @@
                     </div>
                     <div class="form-group">
                         {{ Form::label('supplier_id', 'Supplier:', ['class' => 'control-label']) }}
-                        {{ Form::select('supplier_id', ['',''], null, ['class' => 'form-control']) }}
+                        {{ Form::select('supplier_id', $suppliers, null, ['class' => 'form-control']) }}
                     </div>
                     <div class="form-group">
-                        {{ Form::label('supplier_id', 'Supplier:', ['class' => 'control-label']) }}
-                        {{ Form::select('supplier_id', ['',''], null, ['class' => 'form-control']) }}
+                        {{ Form::label('stock_period_id', 'Stock period:', ['class' => 'control-label']) }}
+                        {{ Form::select('stock_period_id', $stocks_list, $period, ['class' => 'form-control']) }}
                     </div>
                     <div class="form-group">
-                        {{ Form::label('supplier_id', 'Supplier:', ['class' => 'control-label']) }}
-                        {{ Form::select('supplier_id', ['',''], null, ['class' => 'form-control']) }}
+                        <label>
+                            {{ Form::checkbox('status', null); }} Mark as paid
+                        </label>
                     </div>
                     @include('widgets.button', array('class'=>'btn btn-primary', 'value'=>'Submit', 'type' => 'submit'))
                 {{ Form::close() }}

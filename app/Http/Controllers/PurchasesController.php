@@ -3,8 +3,16 @@
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+use App\Models\Files;
 use App\Models\Purchases;
+use App\Models\StockPeriods;
+use App\Models\Suppliers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Input;
+use Helper;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 
 class PurchasesController extends Controller {
 
@@ -29,8 +37,20 @@ class PurchasesController extends Controller {
 	 */
 	public function create()
 	{
+        $currentPeriodId = Helper::currentPeriodId();
+        $periods = StockPeriods::all();
+        $period_list = array();
+        foreach($periods as $period){
+            $period_list[$period->id] = 'Stock #'.$period->number.' ('.$period->date_from.' - '.($period->id == $currentPeriodId ? 'NOW' : $period->date_to).')';
+        }
+        if(Input::has('stock_period')){
+            $currentPeriodId = Input::get('stock_period');
+        }
 		return view('Purchases.create')->with(array(
-            'title' => $this->title
+            'title' => $this->title,
+            'stocks_list' => $period_list,
+            'period' => $currentPeriodId,
+            'suppliers' => Suppliers::lists('title', 'id')
         ));
 	}
 
@@ -39,9 +59,28 @@ class PurchasesController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(Request $request)
 	{
-		//
+        $input = $request->all();
+        if(array_key_exists('status', $input)){
+            $input['status'] = 1;
+            $input['date_paid'] = date('Y-m-d H:i:s', time());
+        } else {
+            $input['status'] = 0;
+        }
+        if(array_key_exists('file', $input)){
+            if($input['file']->isValid()){
+                $filename = 'invoice_'.date('Y_m_d_His').'.'.$input['file']->getClientOriginalExtension();
+                $input['file']->move(storage_path().'/upload', $filename);
+                $file = Files::create(['filename' => $filename]);
+                $input['invoice_id'] = $file->id;
+            }
+        }
+        $currentPeriodId = array_key_exists('stock_period_id', $input) ? $input['stock_period_id'] : Helper::currentPeriodId();
+        $input['stock_period_id'] = $currentPeriodId;
+        Purchases::create($input);
+        Helper::add(DB::getPdo()->lastInsertId(), 'created new invoice ID '.DB::getPdo()->lastInsertId());
+        return Redirect::action('PurchasesController@index');
 	}
 
 	/**
@@ -63,18 +102,51 @@ class PurchasesController extends Controller {
 	 */
 	public function edit($id)
 	{
-		//
+        $currentPeriodId = Helper::currentPeriodId();
+        $item = Purchases::findOrFail($id);
+        $periods = StockPeriods::all();
+        $period_list = array();
+        foreach($periods as $period){
+            $period_list[$period->id] = 'Stock #'.$period->number.' ('.$period->date_from.' - '.($period->id == $currentPeriodId ? 'NOW' : $period->date_to).')';
+        }
+        return view('Purchases.edit')->with(array(
+            'title' => $this->title,
+            'item' => $item,
+            'stocks_list' => $period_list,
+            'suppliers' => Suppliers::lists('title', 'id')
+        ));
 	}
 
 	/**
 	 * Update the specified resource in storage.
 	 *
-	 * @param  int  $id
-	 * @return Response
+	 * @param  Request  $request
+	 * @return Redirect
 	 */
-	public function update($id)
+	public function update($id, Request $request)
 	{
-		//
+        $item = Purchases::findOrFail($id);
+        $input = $request->all();
+        if(array_key_exists('status', $input)){
+            $input['status'] = 1;
+            $input['date_paid'] = date('Y-m-d H:i:s', time());
+        } else {
+            $input['status'] = 0;
+        }
+        if(array_key_exists('file', $input)){
+            if($input['file']->isValid()){
+                $filename = 'invoice_'.date('Y_m_d_His').'.'.$input['file']->getClientOriginalExtension();
+                $input['file']->move(storage_path().'/upload', $filename);
+                $file = Files::create(['filename' => $filename]);
+                $input['invoice_id'] = $file->id;
+            }
+        }
+        $currentPeriodId = array_key_exists('stock_period_id', $input) ? $input['stock_period_id'] : Helper::currentPeriodId();
+        $input['stock_period_id'] = $currentPeriodId;
+        $item->update($input);
+        $item->save();
+        Helper::add(DB::getPdo()->lastInsertId(), 'updated invoice ID '.DB::getPdo()->lastInsertId());
+        return Redirect::action('PurchasesController@index');
 	}
 
 	/**

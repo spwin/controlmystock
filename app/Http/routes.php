@@ -56,6 +56,7 @@ Route::group(['prefix' => 'purchases', 'middleware' => 'auth'], function () {
     Route::resource('suppliers', 'SuppliersController');
     Route::resource('list', 'PurchasesController');
 });
+Route::get('download/{id}', ['uses' =>'FilesController@download']);
 /*Route::group(['prefix' => 'unit-groups'], function () {
     Route::get('/', 'UnitGroupsController@index');
     Route::get('create', 'UnitGroupsController@create');
