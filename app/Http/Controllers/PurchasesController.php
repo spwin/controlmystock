@@ -26,7 +26,7 @@ class PurchasesController extends Controller {
 	{
 		return view('Purchases.index')->with(array(
             'title' => $this->title,
-            'items' => Purchases::all()
+            'items' => Purchases::orderBy('date_delivered', 'DESC')->get()
         ));
 	}
 
@@ -78,9 +78,9 @@ class PurchasesController extends Controller {
         }
         $currentPeriodId = array_key_exists('stock_period_id', $input) ? $input['stock_period_id'] : Helper::currentPeriodId();
         $input['stock_period_id'] = $currentPeriodId;
-        Purchases::create($input);
+        $purchase = Purchases::create($input);
         Helper::add(DB::getPdo()->lastInsertId(), 'created new invoice ID '.DB::getPdo()->lastInsertId());
-        return Redirect::action('PurchasesController@index');
+        return Redirect::action('ItemPurchasesController@index', $purchase->id);
 	}
 
 	/**

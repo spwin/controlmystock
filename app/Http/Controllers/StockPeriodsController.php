@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use Helper;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
@@ -56,6 +57,7 @@ class StockPeriodsController extends Controller {
             $last_period->save();
         }
         StockPeriods::create($input);
+        Helper::add(DB::getPdo()->lastInsertId(), '');
         return Redirect::action('StockPeriodsController@index');
 	}
 

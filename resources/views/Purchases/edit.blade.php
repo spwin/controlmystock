@@ -58,3 +58,17 @@
         </div>
     </div>
 @stop
+@push('scripts')
+<script type="text/javascript">
+    $(function() {
+        $( "#date_created" ).datepicker({
+            maxDate: 'today',
+            dateFormat: 'yy-mm-dd'
+        });
+        $( "#date_delivered" ).datepicker({
+            maxDate: 'today',
+            dateFormat: 'yy-mm-dd'
+        });
+    });
+</script>
+@endpush

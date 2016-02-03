@@ -9,7 +9,7 @@
         @endif
         <a href="{{ action ('PurchasesController@create') }}" class="mb-20px block"><i class="fa fa-plus-circle fa-fw"></i>Add {{ $title }}</a>
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-8">
                 @section ('table_panel_title', $title)
                 @section ('table_panel_body')
                         <table class="table">
@@ -20,6 +20,8 @@
                                 <th>Created</th>
                                 <th>Delivered</th>
                                 <th>Supplier</th>
+                                <th>Total</th>
+                                <th>VAT</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
@@ -32,6 +34,8 @@
                                     <td>{{ $item->date_created }}</td>
                                     <td>{{ $item->date_delivered }}</td>
                                     <td>{{ $item->supplier()->first() ? $item->supplier()->first()->title : '' }}</td>
+                                    <td><strong>£ {{ $item->purchases()->sum('price') }}</strong></td>
+                                    <td><strong>£ {{ $item->purchases()->sum('vat') }}</strong></td>
                                     <td>{{ $item->status ? '<span class="btn-success btn-xs no-hover">Paid</span>' : '<span class="btn-warning btn-xs no-hover">Pending</span>' }}</td>
                                     <td>
                                         <a href="{{ action('ItemPurchasesController@index', $item->id) }}" class="btn btn-xs btn-primary">Manage Items</a>
