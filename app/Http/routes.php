@@ -55,6 +55,10 @@ Route::group(['prefix' => 'stock-periods', 'middleware' => 'auth'], function () 
 Route::group(['prefix' => 'purchases', 'middleware' => 'auth'], function () {
     Route::resource('suppliers', 'SuppliersController');
     Route::resource('list', 'PurchasesController');
+    Route::resource('invoice', 'ItemPurchasesController');
+    Route::get('invoice/index/{id}', ['uses' =>'ItemPurchasesController@index']);
+    Route::post('invoice/generate/{id}', ['uses' =>'ItemPurchasesController@generate']);
+    Route::get('invoice/create/{id}/{type}', ['uses' =>'ItemPurchasesController@create']);
 });
 Route::get('download/{id}', ['uses' =>'FilesController@download']);
 /*Route::group(['prefix' => 'unit-groups'], function () {

@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\ItemPurchases;
 use App\Models\RecipeItems;
 use App\Models\StockItem;
 use Helper;
@@ -52,6 +53,7 @@ class ItemUnitsController extends Controller {
             ItemUnits::where(['item_id' => $input['item_id']])->update(['factor' => DB::raw('factor/'.$input['factor'])]);
             StockItem::where(['item_id' => $input['item_id']])->update(['stock' => DB::raw('stock/'.$input['factor'])]);
             RecipeItems::where(['item_id' => $input['item_id']])->update(['value' => DB::raw('value/'.$input['factor'])]);
+            ItemPurchases::where(['item_id' => $input['item_id']])->update(['value' => DB::raw('value/'.$input['factor'])]);
             StockCheck::where(['item_id' => $input['item_id']])->update(['before' => DB::raw('`before` / '.$input['factor']), 'after' => DB::raw('`after` / '.$input['factor'])]);
         } else {
             $input['default'] = 0;
@@ -84,6 +86,7 @@ class ItemUnitsController extends Controller {
             Helper::add($id, 'changed item '.$item->title.'(ID '.$input['item_id'].') default unit to '.$Units->title);
             StockItem::where(['item_id' => $input['item_id']])->update(['stock' => DB::raw('stock/'.$input['factor'])]);
             RecipeItems::where(['item_id' => $input['item_id']])->update(['value' => DB::raw('value/'.$input['factor'])]);
+            ItemPurchases::where(['item_id' => $input['item_id']])->update(['value' => DB::raw('value/'.$input['factor'])]);
             StockCheck::where(['item_id' => $input['item_id']])->update(['before' => DB::raw('`before` / '.$input['factor']), 'after' => DB::raw('`after` / '.$input['factor'])]);
             $input['default'] = 1;
         }
@@ -104,6 +107,7 @@ class ItemUnitsController extends Controller {
                 ItemUnits::where(['item_id' => $ItemUnits->item_id])->update(['factor' => DB::raw('factor/'.$first->factor)]);
                 StockItem::where(['item_id' => $ItemUnits->item_id])->update(['stock' => DB::raw('stock/'.$first->factor)]);
                 RecipeItems::where(['item_id' => $ItemUnits->item_id])->update(['value' => DB::raw('value/'.$first->factor)]);
+                ItemPurchases::where(['item_id' => $ItemUnits->item_id])->update(['value' => DB::raw('value/'.$first->factor)]);
                 StockCheck::where(['item_id' => $ItemUnits->item_id])->update(['before' => DB::raw('`before` / '.$first->factor), 'after' => DB::raw('`after` / '.$first->factor)]);
                 Helper::add($first->id, 'changed item '.$ItemUnits->item()->first()->title.' (ID '.$ItemUnits->item()->first()->id.') default unit to '.$first->unit()->first()->title);
             }
@@ -124,6 +128,7 @@ class ItemUnitsController extends Controller {
         ItemUnits::where(['item_id' => $itemUnit->item_id])->update(['factor' => DB::raw('factor/'.$itemUnit->factor)]);
         StockItem::where(['item_id' => $itemUnit->item_id])->update(['stock' => DB::raw('stock/'.$itemUnit->factor)]);
         RecipeItems::where(['item_id' => $itemUnit->item_id])->update(['value' => DB::raw('value/'.$itemUnit->factor)]);
+        ItemPurchases::where(['item_id' => $itemUnit->item_id])->update(['value' => DB::raw('value/'.$itemUnit->factor)]);
         StockCheck::where(['item_id' => $itemUnit->item_id])->update(['before' => DB::raw('`before` / '.$itemUnit->factor), 'after' => DB::raw('`after` / '.$itemUnit->factor)]);
         return Redirect::action('ItemUnitsController@index', array('item_id' => $itemUnit->item_id));
     }

@@ -21,4 +21,8 @@ class Units extends Model
     public function itemUnits() {
         return $this->hasMany('App\Models\ItemUnits', 'unit_id', 'id');
     }
+
+    public function purchases(){
+        return $this->hasMany('App\Models\ItemPurchases', 'unit_id', 'id');
+    }
 }

@@ -191,3 +191,42 @@ var unitsForm = function(){
     }
 }();
 
+var purchaseItemForm = function(){
+    var form;
+    var select;
+    var units_select;
+    var value;
+    var items_units;
+    var units;
+    var entered_value;
+    var item_to_unit;
+    return {
+        init: function(f, s, us, v, ve, iu, u, itu){
+            form = f;
+            select = s;
+            units_select = us;
+            value = v;
+            entered_value = ve;
+            items_units = iu;
+            units = u;
+            item_to_unit = itu;
+            purchaseItemForm.bind();
+        },
+        bind: function(){
+            select.on('change', function(){
+                units_select.html('');
+                var select_population = items_units[$(this).val()];
+                for(key in select_population){
+                    units_select.append('<option value="'+select_population[key]['id']+'">'+select_population[key]['title']+'</option>');
+                }
+            });
+
+            form.on('submit', function(){
+                value.val(entered_value.val()*units[units_select.val()]);
+                units_select.val(item_to_unit[units_select.val()]);
+                return true;
+            });
+        }
+    }
+}();
+

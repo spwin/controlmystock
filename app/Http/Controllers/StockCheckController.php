@@ -24,18 +24,22 @@ class StockCheckController extends Controller {
         $currentPeriodId = Helper::currentPeriodId();
         if($currentPeriodId) {
             $search = Input::get('q');
-            $items = $search ? Items::where('title', 'LIKE', '%' . $search . '%')->get() : Items::all();
+            $filter = Input::get('filter');
+            $not_updated = Items::select('count(*)')->whereRaw('not exists (select 1 from stock_items where stock_items.stock_period_id = '.$currentPeriodId.' and stock_items.item_id = items.id)')->count();
+            $items = $search ? Items::where('title', 'LIKE', '%' . $search . '%')->get() : ($filter == 'without_stock' ? Items::select('items.*')->whereRaw('not exists (select 1 from stock_items where stock_items.stock_period_id = '.$currentPeriodId.' and stock_items.item_id = items.id)')->get() : Items::all());
             if (count($items) == 1 && $search) {
                 return redirect()->action('StockCheckController@edit', ['item_id' => $items->first()->id]);
             }
             $last_period = StockPeriods::where(['number' => StockPeriods::findOrFail($currentPeriodId)->number - 1])->get();
             return view('StockCheck.index')->with(array(
                 'title' => $this->title,
-                'items' => $search ? Items::where('title', 'LIKE', '%' . $search . '%')->take(10)->get() : Items::orderBy("updated_at", 'DESC')->take(10)->get(),
+                'items' => $search ? Items::where('title', 'LIKE', '%' . $search . '%')->take(10)->get() : ($filter == 'without_stock' ? Items::select('items.*')->whereRaw('not exists (select 1 from stock_items where stock_items.stock_period_id = '.$currentPeriodId.' and stock_items.item_id = items.id)')->orderBy("updated_at", 'DESC')->take(10)->get() : Items::orderBy("updated_at", 'DESC')->take(10)->get()),
                 'item_list' => Items::lists('title'),
                 'search' => $search,
                 'period' => $currentPeriodId,
-                'previous' => count($last_period) > 0 ? $last_period->first()->id : 0
+                'previous' => count($last_period) > 0 ? $last_period->first()->id : 0,
+                'filter' => $filter,
+                'not_updated' => $not_updated
             ));
         } else {
             Session::flash('flash_message', 'You need to start a period first!');

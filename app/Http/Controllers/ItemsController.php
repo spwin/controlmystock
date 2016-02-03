@@ -86,7 +86,7 @@ class ItemsController extends Controller {
     {
         $Items = Items::findOrFail($id);
 
-        Helper::add($Items->id, 'edited item '.$Items->title);
+        Helper::add($Items->id, 'deleted item '.$Items->title);
         $Items->delete();
 
         Session::flash('flash_message', $this->title.' successfully deleted!');

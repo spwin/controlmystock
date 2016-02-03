@@ -26,7 +26,15 @@
         @if(count($items) > 0)
         <div class="row">
             <div class="col-lg-6">
-                @section ('table_panel_title', 'Last 10 updated items stock')
+                @section ('table_panel_title')
+                    @if($filter == 'without_stock')
+                        Items with not checked current stock
+                        <a href="{{ action('StockCheckController@index') }}" class=" right btn btn-warning btn-xs">Show last 10 updated</a>
+                    @else
+                        Last 10 updated items stock
+                        {{ $not_updated ? '<a href="'.action('StockCheckController@index', ['filter' => 'without_stock']).'" class="right btn btn-warning btn-xs">items to check ('.$not_updated.')</a>' : '' }}
+                    @endif
+                @endsection
                 @section ('table_panel_body')
                         <table class="table">
                             <thead>
@@ -63,7 +71,12 @@
             </div>
         </div>
         @else
-            <a href="{{ action('ItemsController@create', $search ? ['name' => $search] : []) }}" class="btn-success btn btn-large">Add item</a>
+            @if($filter == 'without_stock')
+                <h3>All items are up to date!</h3>
+                    <a href="{{ action('StockCheckController@index') }}" class="btn-success btn btn-large">Show last 10 updated items</a>
+            @else
+                <a href="{{ action('ItemsController@create', $search ? ['name' => $search] : []) }}" class="btn-success btn btn-large">Add item</a>
+            @endif
         @endif
     </div>
 @stop

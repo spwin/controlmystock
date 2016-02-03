@@ -18,5 +18,8 @@ label,
 .no-hover.btn-success:hover {
   background-color: #5cb85c;
 }
+.right {
+  float: right;
+}
 
 /*# sourceMappingURL=app.css.map */

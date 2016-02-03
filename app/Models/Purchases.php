@@ -17,4 +17,8 @@ class Purchases extends Model {
     public function period(){
         return $this->hasOne('App\Models\StockPeriods', 'id', 'stock_period_id');
     }
+
+    public function purchases(){
+        return $this->hasMany('App\Models\ItemPurchases', 'purchase_id', 'id');
+    }
 }
