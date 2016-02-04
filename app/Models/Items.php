@@ -33,4 +33,8 @@ class Items extends Model {
     public function purchases(){
         return $this->hasMany('App\Models\ItemPurchases', 'item_id', 'id');
     }
+
+    public function menus(){
+        return $this->hasMany('App\Models\Menus', 'item_id', 'id');
+    }
 }

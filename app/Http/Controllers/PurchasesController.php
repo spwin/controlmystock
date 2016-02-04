@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Helper;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 
 class PurchasesController extends Controller {
@@ -157,7 +158,11 @@ class PurchasesController extends Controller {
 	 */
 	public function destroy($id)
 	{
-		//
+		$purchase = Purchases::findOrFail($id);
+        $purchase->delete();
+        Helper::add($id, 'deleted purchase');
+        Session::flash('flash_message', $this->title.' successfully deleted!');
+        return Redirect::action('PurchasesController@index');
 	}
 
 }

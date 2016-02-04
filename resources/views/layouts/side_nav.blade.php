@@ -53,6 +53,9 @@
                     </li>
                 </ul>
             </li>
+            <li {{ (Request::is('*menu*') ? 'class="active"' : '') }}>
+                <a href="{{ action('MenusController@index') }}"><i class="fa fa-cutlery fa-fw"></i> Menu</a>
+            </li>
             <li {{ (Request::is('*stock-periods*') ? 'class="active"' : '') }}>
                 <a href="{{ action('StockPeriodsController@index') }}"><i class="fa fa-calendar fa-fw"></i> Periods</a>
             </li>

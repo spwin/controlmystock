@@ -61,12 +61,11 @@ Route::group(['prefix' => 'purchases', 'middleware' => 'auth'], function () {
     Route::get('invoice/create/{id}/{type}', ['uses' =>'ItemPurchasesController@create']);
 });
 Route::get('download/{id}', ['uses' =>'FilesController@download']);
-/*Route::group(['prefix' => 'unit-groups'], function () {
-    Route::get('/', 'UnitGroupsController@index');
-    Route::get('create', 'UnitGroupsController@create');
-    Route::get('store', 'UnitGroupsController@store');
-});*/
-
+Route::group(['prefix' => 'menu', 'middleware' => 'auth'], function () {
+    Route::resource('list', 'MenusController');
+    Route::get('assign/{id}', 'MenusController@assign');
+    Route::post('menu-integrate', 'MenusController@uploadMenu');
+});
 /*
 |--------------------------------------------------------------------------
 | Application Routes
