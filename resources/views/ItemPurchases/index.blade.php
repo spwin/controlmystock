@@ -52,15 +52,15 @@
                                         {{ Form::close() }}
                                     </td>
                                 </tr>
-                                <?php $total_price = round($total_price + $item->price, 2); $total_vat = round($total_vat + $item->vat, 2); ?>
+                                <?php $total_price += $item->price; $total_vat += $item->vat; ?>
                             @endforeach
                             {{ Form::open([
                             'method' => '',
                             'action' => ['ItemPurchasesController@generate', $purchase->id]
                             ]) }}
                                 <th colspan="5" style="text-align: right;">TOTAL:</th>
-                                <th><input name="total_price" type="text" value="{{ round($total_price, 2) }}" style="width: 80px; position: absolute;"></th>
-                                <th><input name="total_vat" type="text" value="{{ round($total_vat, 2) }}" style="width: 80px; position: absolute;"></th>
+                                <th><input name="total_price" type="text" value="{{ $total_price }}" style="width: 80px; position: absolute;"></th>
+                                <th><input name="total_vat" type="text" value="{{ $total_vat }}" style="width: 80px; position: absolute;"></th>
                             <th>{{ Form::submit('Generate', ['class' => 'btn btn-success btn-xs']) }}</th>
                             {{ Form::close() }}
                             </tbody>
