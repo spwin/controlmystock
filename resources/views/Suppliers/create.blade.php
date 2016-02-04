@@ -24,7 +24,7 @@
                     </div>
                     <div class="form-group">
                         {{ Form::label('vat', 'VAT number:', ['class' => 'control-label']) }}
-                        {{ Form::text('vat', null, ['class' => 'form-control', 'placeholder' => 'VAT', 'required' => 'required']) }}
+                        {{ Form::text('vat', null, ['class' => 'form-control', 'placeholder' => 'VAT']) }}
                     </div>
                     <div class="form-group">
                         {{ Form::label('email', 'Email:', ['class' => 'control-label']) }}

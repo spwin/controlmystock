@@ -1,5 +1,6 @@
 @extends('layouts.dashboard')
 @section('page_heading', 'Add item to invoice')
+@section('body-tag', 'onload="FocusOnInput(\'item_custom\')"')
 @section('section')
     <div class="col-sm-12">
         <a href="{{ action ('ItemPurchasesController@index', $purchase->id) }}" class="mb-20px block"><i class="fa fa-arrow-left fa-fw"></i>Back to list</a>

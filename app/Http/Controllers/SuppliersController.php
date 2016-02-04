@@ -45,7 +45,7 @@ class SuppliersController extends Controller {
 	 */
     public function store(Request $request){
         $this->validate($request, [
-            'vat' => 'required|unique:suppliers|max:50'
+            'vat' => 'max:20'
         ]);
         $input = $request->all();
         Suppliers::create($input);
@@ -92,7 +92,7 @@ class SuppliersController extends Controller {
         $Suppliers = Suppliers::findOrFail($id);
 
         $this->validate($request, [
-            'vat' => 'required|max:100'
+            'vat' => 'max:20'
         ]);
 
         $input = $request->all();

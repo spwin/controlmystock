@@ -159,7 +159,7 @@ class ItemPurchasesController extends Controller
             $total_price += $item->price;
             $total_vat += $item->vat;
         }
-        $item = ItemPurchases::where(['item_custom' => 'Other items'])->first();
+        $item = ItemPurchases::where(['item_custom' => 'Other items', 'purchase_id' => $id])->first();
         if($total_price != $input['total_price'] || $total_vat != $input['total_vat']) {
             if (count($item) > 0) {
                 $item->increment('price', round($input['total_price'] - $total_price, 2));

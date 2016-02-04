@@ -34,8 +34,8 @@
                                     <td>{{ $item->date_created }}</td>
                                     <td>{{ $item->date_delivered }}</td>
                                     <td>{{ $item->supplier()->first() ? $item->supplier()->first()->title : '' }}</td>
-                                    <td><strong>£ {{ $item->purchases()->sum('price') }}</strong></td>
-                                    <td><strong>£ {{ $item->purchases()->sum('vat') }}</strong></td>
+                                    <td><strong>£ {{ round($item->purchases()->sum('price'), 2) }}</strong></td>
+                                    <td><strong>£ {{ round($item->purchases()->sum('vat'), 2) }}</strong></td>
                                     <td>{{ $item->status ? '<span class="btn-success btn-xs no-hover">Paid</span>' : '<span class="btn-warning btn-xs no-hover">Pending</span>' }}</td>
                                     <td>
                                         <a href="{{ action('ItemPurchasesController@index', $item->id) }}" class="btn btn-xs btn-primary">Manage Items</a>
