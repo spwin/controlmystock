@@ -2,7 +2,7 @@
 @section('page_heading', $title.' create')
 @section('section')
     <div class="col-sm-12">
-        <a href="{{ action ('UnitGroupsController@index') }}" class="mb-20px block"><i class="fa fa-arrow-left fa-fw"></i>Back to list</a>
+        <a href="{{ action ('SuppliersController@index') }}" class="mb-20px block"><i class="fa fa-arrow-left fa-fw"></i>Back to list</a>
         @if($errors->any())
             <div class="alert alert-danger">
                 @foreach($errors->all() as $error)

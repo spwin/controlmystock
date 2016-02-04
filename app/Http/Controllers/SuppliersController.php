@@ -92,7 +92,7 @@ class SuppliersController extends Controller {
         $Suppliers = Suppliers::findOrFail($id);
 
         $this->validate($request, [
-            'vat' => 'required|max:100'
+            'vat' => 'max:20'
         ]);
 
         $input = $request->all();
