@@ -50,7 +50,7 @@ class PurchasesController extends Controller {
             'title' => $this->title,
             'stocks_list' => $period_list,
             'period' => $currentPeriodId,
-            'suppliers' => Suppliers::lists('title', 'id')
+            'suppliers' => Suppliers::orderBy('title', 'ASC')->lists('title', 'id')
         ));
 	}
 
@@ -113,7 +113,7 @@ class PurchasesController extends Controller {
             'title' => $this->title,
             'item' => $item,
             'stocks_list' => $period_list,
-            'suppliers' => Suppliers::lists('title', 'id')
+            'suppliers' => Suppliers::orderBy('title', 'ASC')->lists('title', 'id')
         ));
 	}
 
