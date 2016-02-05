@@ -44,6 +44,7 @@
                                 <th>Opening</th>
                                 <th>Purchases</th>
                                 <th>Sales</th>
+                                <th>Wastage</th>
                                 <th>Predicted</th>
                                 <th>Closing</th>
                                 <th>Difference</th>
@@ -59,6 +60,7 @@
                                     <td>{{ $single['last_stock'] }} {{ $single['units'] }}</td>
                                     <td>{{ $single['purchases']['value'] }} {{ $single['units'] }}</td>
                                     <td>{{ $single['sales'] }} {{ $single['units'] }}</td>
+                                    <td>{{ $single['wastage'] }} {{ $single['units'] }}</td>
                                     <td>{{ $single['must_stock'] }} {{ $single['units'] }}</td>
                                     <td>{{ $single['current_stock'] }} {{ $single['units'] }}</td>
                                     <td>{{ $single['stock_difference'] }} {{ $single['units'] }}</td>

@@ -18,4 +18,7 @@ class Menu extends Model {
         return $this->hasMany('App\Models\SaleItems', 'menu_id', 'id');
     }
 
+    public function wastes(){
+        return $this->hasMany('App\Models\Wastes', 'menu_id', 'id');
+    }
 }

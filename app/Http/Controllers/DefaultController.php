@@ -3,9 +3,11 @@
 use App\Models\ItemCategories;
 use App\Models\Items;
 use App\Models\Purchases;
+use App\Models\Recipes;
 use App\Models\SaleItems;
 use App\Models\Sales;
 use App\Models\StockItem;
+use App\Models\Wastes;
 use Helper;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -14,6 +16,21 @@ use Illuminate\Http\Request;
 
 class DefaultController extends Controller {
 
+
+    function countUsageFromRecipe($recipe, $array = []){
+        foreach($recipe->items()->get() as $item){
+            if($item->type == 'item'){
+                if(array_key_exists($item->item_id, $array)){
+                    $array[$item->item_id] += $item->value;
+                } else {
+                    $array[$item->item_id] = $item->value;
+                }
+            } elseif($item->type == 'recipe'){
+                return $this->countUsageFromRecipe($item->subrecipe()->first(), $array);
+            }
+        }
+        return $array;
+    }
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -27,6 +44,7 @@ class DefaultController extends Controller {
         $last_stock = [];
         $current_stock = [];
         $item_sales = [];
+        $item_wastes = [];
         $items = [];
         if($last_period){
             $purchases = Purchases::orderBy('date_created', 'ASC')->where(['stock_period_id' => $last_period])->get();
@@ -77,7 +95,63 @@ class DefaultController extends Controller {
                                 $item_sales[$menu->item_id] = ($menu->value * $sale_item->quantity);
                             }
                         } elseif ($menu->type == 'recipe'){
+                            $recipe = $menu->recipe()->first();
+                            if($recipe){
+                                $usage = $this->countUsageFromRecipe($recipe);
+                                foreach($usage as $key => $use){
+                                    if(array_key_exists($key, $item_sales)){
+                                        $item_sales[$key] += $use;
+                                    } else {
+                                        $item_sales[$key] = $use;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
+            $wastes = Wastes::where(['stock_period_id' => $current_period])->get();
+            foreach($wastes as $waste){
+                if($waste->type == 'item'){
+                    if(array_key_exists($waste->item_id, $item_wastes)){
+                        $item_wastes[$waste->item_id] += $waste->value;
+                    } else {
+                        $item_wastes[$waste->item_id] = $waste->value;
+                    }
+                } elseif($waste->type == 'recipe'){
+                    $recipe = $waste->recipe()->first();
+                    if($recipe){
+                        $usage = $this->countUsageFromRecipe($recipe);
+                        foreach($usage as $key => $use){
+                            if(array_key_exists($key, $item_wastes)){
+                                $item_wastes[$key] += $use;
+                            } else {
+                                $item_wastes[$key] = $use;
+                            }
+                        }
+                    }
+                } elseif($waste->type == 'menu'){
+                    $menu = $waste->menu()->first();
+                    if($menu){
+                        if($menu->type == 'item'){
+                            if(array_key_exists($menu->item_id, $item_wastes)){
+                                $item_wastes[$menu->item_id] += $menu->value;
+                            } else {
+                                $item_wastes[$menu->item_id] = $menu->value;
+                            }
+                        } elseif ($menu->type == 'recipe'){
+                            $recipe = $menu->recipe()->first();
+                            if($recipe){
+                                $usage = $this->countUsageFromRecipe($recipe);
+                                foreach($usage as $key => $use){
+                                    if(array_key_exists($key, $item_wastes)){
+                                        $item_wastes[$key] += $use;
+                                    } else {
+                                        $item_wastes[$key] = $use;
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -96,13 +170,14 @@ class DefaultController extends Controller {
             //$items[$item->id]['object'] = $item;
             $current_item['title'] = $item->title;
             $current_item['units'] = $item->units()->where(['default' => 1])->first()->unit()->first()->title;
+            $current_item['wastage'] = array_key_exists($item->id, $item_wastes) ? $item_wastes[$item->id] : 0;
             $current_item['last_stock'] = array_key_exists($item->id, $last_stock) ? $last_stock[$item->id] : 0;
             $current_item['current_stock'] = array_key_exists($item->id, $current_stock) ? $current_stock[$item->id] : 0;
             $current_item['purchases'] = array_key_exists($item->id, $item_purchases) ? $item_purchases[$item->id] : ['value' => 0, 'price' => 0, 'occurrences' => 0];
             $current_item['sales'] = array_key_exists($item->id, $item_sales) ? $item_sales[$item->id] : 0;
-            $current_item['must_stock'] = $current_item['last_stock'] + $current_item['purchases']['value'] - $current_item['sales'];
+            $current_item['must_stock'] = $current_item['last_stock'] + $current_item['purchases']['value'] - $current_item['sales'] - $current_item['wastage'];
             $current_item['stock_difference'] = $current_item['current_stock'] - $current_item['must_stock'];
-            $current_item['variance'] = round(($current_item['current_stock'] - ($current_item['last_stock'] + $current_item['purchases']['value'] - $current_item['sales'])) * $current_item['purchases']['price'], 2);
+            $current_item['variance'] = round($current_item['stock_difference'] * $current_item['purchases']['price'], 2);
             $variance += $current_item['variance'];
             $items[$item->category()->first()->id]['variance'] += $current_item['variance'];
             $items[$item->category()->first()->id]['items'][$item->id] = $current_item;

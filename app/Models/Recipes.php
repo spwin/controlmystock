@@ -13,4 +13,8 @@ class Recipes extends Model {
     public function menus(){
         return $this->hasMany('App\Models\Menus', 'item_id', 'id');
     }
+
+    public function wastes(){
+        return $this->hasMany('App\Models\Wastes', 'recipe_id', 'id');
+    }
 }

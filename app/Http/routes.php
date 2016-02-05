@@ -78,6 +78,11 @@ Route::group(['middleware' => 'auth'], function()
     Route::resource('/', 'DefaultController@index');
 });
 
+Route::group(['prefix' => 'wastes', 'middleware' => 'auth'], function () {
+    Route::resource('list', 'WastesController');
+    Route::resource('reasons', 'WasteReasonsController');
+});
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes

@@ -53,6 +53,17 @@
                     </li>
                 </ul>
             </li>
+            <li>
+                <a href="#"><i class="fa fa-trash-o fa-fw"></i> Wastage<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    <li {{ (Request::is('*wastes/reasons*') ? 'class="active"' : '') }}>
+                        <a href="{{ action('WasteReasonsController@index') }}"> Reasons</a>
+                    </li>
+                    <li {{ (Request::is('*wastes/list*') ? 'class="active"' : '') }}>
+                        <a href="{{ action('WastesController@index') }}"> Wastes</a>
+                    </li>
+                </ul>
+            </li>
             <li {{ (Request::is('*menu*') ? 'class="active"' : '') }}>
                 <a href="{{ action('MenusController@index') }}"><i class="fa fa-cutlery fa-fw"></i> Menu</a>
             </li>

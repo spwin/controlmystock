@@ -17,4 +17,8 @@ class StockPeriods extends Model {
     public function sales(){
         return $this->hasMany('App\Models\SaleItems', 'stock_period_id', 'id');
     }
+
+    public function wastes(){
+        return $this->hasMany('App\Models\Wastes', 'stock_period_id', 'id');
+    }
 }

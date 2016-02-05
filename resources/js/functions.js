@@ -259,7 +259,6 @@ var MenuItemForm = function(){
             MenuItemForm.changeSection(item_type);
         },
         changeSection: function(name){
-            console.log(name);
             section.hide();
             if(name == 'item'){
                 item_form.show();
