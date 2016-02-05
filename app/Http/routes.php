@@ -73,7 +73,10 @@ Route::group(['prefix' => 'sales', 'middleware' => 'auth'], function () {
     Route::get('items/index/{id}', 'SaleItemsController@index');
 });
 
-Route::resource('/', 'DefaultController@index', ['middleware' => 'auth']);
+Route::group(['middleware' => 'auth'], function()
+{
+    Route::resource('/', 'DefaultController@index');
+});
 
 /*
 |--------------------------------------------------------------------------
