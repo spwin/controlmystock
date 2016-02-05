@@ -44,7 +44,7 @@ class DefaultController extends Controller {
                 }
             }
             foreach($item_purchases as $key => $purchase){
-                $item_purchases[$key]['price'] = round($purchase['price']/$purchase['occurrences'], 2);
+                $item_purchases[$key]['price'] = $purchase['price']/$purchase['occurrences'];
             }
 
             $last_stock_items = StockItem::where(['stock_period_id' => $last_period])->get();
