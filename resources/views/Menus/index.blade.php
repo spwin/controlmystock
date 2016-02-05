@@ -36,6 +36,7 @@
                                 <th>Aloha nr.</th>
                                 <th>Title</th>
                                 <th>Assigned to</th>
+                                <th>Type</th>
                                 <th>Price</th>
                                 <th>Actions</th>
                             </tr>
@@ -45,18 +46,26 @@
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->number }}</td>
-                                    <td>{{ $item->title }}</td>
+                                    <td>{{ ($item->checked ? '' : '<span class="no-hover btn-success btn-xs">NEW</span> ' ) . $item->title }}</td>
                                     <td>
                                         @if($item->type == 'item')
-                                            {{ '<a href="'.action('ItemsController@edit', $item->item()->first()->id).'" class="btn btn-primary btn-xs">'.$item->type.'</a>' }}
+                                            {{ $item->value.' '.$item->item()->first()->units()->where(['default' => 1])->first()->unit()->first()->title.' of '.$item->item()->first()->title }}
                                         @elseif($item->type == 'recipe')
-                                            {{ '<a href="'.action('RecipesController@index', $item->recipe()->first()->id).'" class="btn btn-success btn-xs">'.$item->type.'</a>' }}
+                                            {{ $item->recipe()->first()->title }}
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($item->type == 'item')
+                                            {{ '<a href="'.action('ItemUnitsController@index', $item->item()->first()->id).'" class="btn btn-primary btn-xs">'.$item->type.'</a>' }}
+                                        @elseif($item->type == 'recipe')
+                                            {{ '<a href="'.action('RecipeItemsController@index', $item->recipe()->first()->id).'" class="btn btn-success btn-xs">'.$item->type.'</a>' }}
                                         @else
                                             {{ '<a href="'.action('MenusController@assign', $item->id).'" class="btn btn-danger btn-xs">unassigned</a>' }}
                                         @endif
                                     </td>
                                     <td>£ {{ $item->price }}</td>
                                     <td>
+                                        {{ $item->type ? '<a href="'.action('MenusController@assign', $item->id).'" class="btn btn-warning btn-xs">Edit</a>' : '' }}
                                         {{ Form::open([
                                         'method' => 'DELETE',
                                         'action' => ['MenusController@destroy', $item->id],

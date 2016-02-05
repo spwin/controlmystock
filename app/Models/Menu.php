@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Menu extends Model {
 
-	protected $fillable = ['number', 'title', 'price', 'type', 'item_id', 'recipe_id', 'value'];
+	protected $fillable = ['number', 'title', 'price', 'type', 'item_id', 'recipe_id', 'value', 'checked'];
 
     public function item(){
         return $this->hasOne('App\Models\Items', 'id', 'item_id');
@@ -12,6 +12,10 @@ class Menu extends Model {
 
     public function recipe(){
         return $this->hasOne('App\Models\Recipes', 'id', 'recipe_id');
+    }
+
+    public function sales(){
+        return $this->hasMany('App\Models\SaleItems', 'menu_id', 'id');
     }
 
 }

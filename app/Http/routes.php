@@ -66,6 +66,15 @@ Route::group(['prefix' => 'menu', 'middleware' => 'auth'], function () {
     Route::get('assign/{id}', 'MenusController@assign');
     Route::post('menu-integrate', 'MenusController@uploadMenu');
 });
+Route::group(['prefix' => 'sales', 'middleware' => 'auth'], function () {
+    Route::resource('list', 'SalesController');
+    Route::post('sales-integrate', 'SalesController@uploadMenu');
+    Route::resource('items', 'SaleItemsController');
+    Route::get('items/index/{id}', 'SaleItemsController@index');
+});
+
+Route::resource('/', 'DefaultController@index', ['middleware' => 'auth']);
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -89,11 +98,6 @@ Route::post('auth/register', 'Auth\AuthController@postRegister');
 Route::controllers([
     'password' => 'Auth\PasswordController',
 ]);
-
-Route::get('/', ['middleware' => 'auth', function()
-{
-	return View::make('home');
-}]);
 
 Route::get('/charts', function()
 {

@@ -24,6 +24,7 @@ class CreateMenusTable extends Migration {
             $table->float('value', null, null)->nullable();
             $table->integer('recipe_id')->unsigned()->nullable();
             $table->foreign('recipe_id')->references('id')->on('recipes')->onDelete('set null');
+            $table->boolean('checked');
 			$table->timestamps();
 		});
 	}

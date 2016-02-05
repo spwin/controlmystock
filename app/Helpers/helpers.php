@@ -25,4 +25,13 @@ class Helper {
         return count($period) > 0 ? $period->first()->id : 0;
     }
 
+    public static function lastPeriodId() {
+        $current = \App\Models\StockPeriods::whereNull('date_to')->get();
+        if(count($current) > 0){
+            $number = $current->first()->number - 1;
+            $period = \App\Models\StockPeriods::where(['number' => $number])->get();
+        }
+        return count($period) > 0 ? $period->first()->id : 0;
+    }
+
 }

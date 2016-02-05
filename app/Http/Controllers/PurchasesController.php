@@ -25,9 +25,27 @@ class PurchasesController extends Controller {
 	 */
 	public function index()
 	{
+        $currentPeriodId = Helper::currentPeriodId();
+        $periods = StockPeriods::all();
+        $period_list = array();
+        $period_dates = array();
+        foreach($periods as $period){
+            $period_list[$period->id] = 'Stock #'.$period->number.' ('.$period->date_from.' - '.($period->id == $currentPeriodId ? 'NOW' : $period->date_to).')';
+            $period_dates[$period->id] = ['from' => date('Y-m-d', strtotime($period->date_from)), 'to' => date('Y-m-d', strtotime($period->date_to))];
+        }
+        if(Input::has('stock_period')){
+            $currentPeriodId = Input::get('stock_period');
+        }
+        $date_from = Input::has('date_from') ? Input::get('date_from') : $period_dates[$currentPeriodId]['from'];
+        $date_to = Input::has('date_to') ? Input::get('date_to') : date('Y-m-d', time());
 		return view('Purchases.index')->with(array(
             'title' => $this->title,
-            'items' => Purchases::orderBy('date_delivered', 'DESC')->get()
+            'items' => Purchases::where('date_created', '>=', $date_from)->where('date_created', '<=', $date_to)->orderBy('date_created', 'DESC')->get(),
+            'period' => $currentPeriodId,
+            'stocks_list' => $period_list,
+            'period_dates' => $period_dates,
+            'date_from' => $date_from,
+            'date_to' => $date_to
         ));
 	}
 

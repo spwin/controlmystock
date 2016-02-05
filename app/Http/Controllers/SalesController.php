@@ -1,25 +1,23 @@
 <?php namespace App\Http\Controllers;
 
-use App\Models\Items;
-use App\Models\ItemUnits;
-use App\Models\RecipeItems;
-use App\Models\Recipes;
+use App\Models\Files;
+use App\Models\Menu;
+use App\Models\SaleItems;
 use Helper;
+use Illuminate\Support\Facades\Input;
+use App\Models\StockPeriods;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\Models\Files;
-use App\Models\Menu;
+use App\Models\Sales;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
-class MenusController extends Controller {
+class SalesController extends Controller {
 
-    private $title = 'Menu';
+    private $title = 'Sale';
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -27,9 +25,44 @@ class MenusController extends Controller {
 	 */
 	public function index()
 	{
-		return view('Menus.index')->with(array(
+        $currentPeriodId = Helper::currentPeriodId();
+        $periods = StockPeriods::all();
+        $period_list = array();
+        foreach($periods as $period){
+            $period_list[$period->id] = 'Stock #'.$period->number.' ('.$period->date_from.' - '.($period->id == $currentPeriodId ? 'NOW' : $period->date_to).')';
+        }
+        if(Input::has('stock_period')){
+            $currentPeriodId = Input::get('stock_period');
+        }
+        $sales = Sales::where(['stock_period_id' => $currentPeriodId])->get();
+		return view('Sales.index')->with(array(
             'title' => $this->title,
-            'items' => Menu::orderBy('checked', 'ASC')->orderBy('title', 'ASC')->get()
+            'period' => $currentPeriodId,
+            'items' => $sales,
+            'stocks_list' => $period_list
+        ));
+	}
+
+	/**
+	 * Show the form for creating a new resource.
+	 *
+	 * @return Response
+	 */
+	public function create()
+	{
+        $currentPeriodId = Helper::currentPeriodId();
+        $periods = StockPeriods::all();
+        $period_list = array();
+        foreach($periods as $period){
+            $period_list[$period->id] = 'Stock #'.$period->number.' ('.$period->date_from.' - '.($period->id == $currentPeriodId ? 'NOW' : $period->date_to).')';
+        }
+        if(Input::has('stock_period')){
+            $currentPeriodId = Input::get('stock_period');
+        }
+        return view('Sales.create')->with(array(
+            'title' => $this->title,
+            'period' => $currentPeriodId,
+            'stocks_list' => $period_list
         ));
 	}
 
@@ -95,55 +128,29 @@ class MenusController extends Controller {
         $data = $this->postUpload($request);
         if(is_array($data)) {
             $before = Menu::count();
+            $sale = Sales::create(['stock_period_id' => $request->get('stock_period_id')]);
             foreach ($data as $item) {
-                Menu::updateOrCreate(
+                $menu = Menu::updateOrCreate(
                     ['number' => $item['number']],
                     ['number' => $item['number'], 'title' => $item['title'], 'price' => $item['price']]
                 );
+                $data = [
+                    'quantity' => $item['quantity'],
+                    'menu_id' => $menu->id,
+                    'sale_id' => $sale->id,
+                    'price' => $item['price'],
+                    'total_price' => round($item['price']*$item['quantity'])
+                ];
+                SaleItems::create($data);
             }
             $difference = Menu::count() - $before;
-            Helper::add('', 'uploaded menu items import file');
-            if($difference > 0) {
-                Session::flash('flash_message', $difference . ' ' . $this->title . ' items successfully imported!');
-            } else {
-                Session::flash('flash_message', 'No new ' . $this->title . ' items imported!');
-            }
-            return Redirect::action('MenusController@index');
+            Helper::add('', 'uploaded '.$difference.' menu items import file on import sales action');
+            Session::flash('flash_message', 'Sale uploaded successfully with '.$difference.' new items added to menu.');
+            return Redirect::action('SalesController@index', ['stock_period' => $request->get('stock_period_id')]);
         } else {
             return $data;
         }
     }
-
-    public function assign($id)
-    {
-        $menu = Menu::findOrFail($id);
-        $select_recipes = Recipes::orderBy('title', 'ASC')->lists('title', 'id');
-        $items = ItemUnits::orderBy('default', 'DESC')->get();
-        $items_units = [];
-        foreach($items as $item){
-            $items_units['list'][$item->item()->first()->id][] = ['id' => $item->id, 'title' => $item->unit()->first()->title];
-            $items_units['php_list'][$item->item()->first()->id][$item->id] = $item->unit()->first()->title;
-            $items_units['factors'][$item->id] = $item->factor;
-        }
-        $select_items = Items::orderBy('title', 'ASC')->lists('title', 'id');
-        return view('Menus.assign')->with(array(
-            'title' => $this->title,
-            'item' => $menu,
-            'recipes' => $select_recipes,
-            'items' => $select_items,
-            'items_units' => $items_units
-        ));
-    }
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
-	}
 
 	/**
 	 * Store a newly created resource in storage.
@@ -183,15 +190,9 @@ class MenusController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id, Request $request)
+	public function update($id)
 	{
-        $input = $request->all();
-        $menu = Menu::findOrFail($id);
-        $menu->update($input);
-        $menu->save();
-        Helper::add($menu->id, 'assigned object to menu item '.$menu->title.' (ID: '.$menu->id.')');
-        Session::flash('flash_message', 'Successfully assigned to '.$menu->title.'!');
-        return Redirect::action('MenusController@index');
+		//
 	}
 
 	/**
@@ -200,13 +201,14 @@ class MenusController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy($id, Request $request)
 	{
-        $menu = Menu::findOrFail($id);
-        $menu->delete();
-        Helper::add($id, 'deleted menu item');
+        $sale = Sales::findOrFail($id);
+        $sale->delete();
+        Helper::add($id, 'deleted sale');
         Session::flash('flash_message', $this->title.' item successfully deleted!');
-        return Redirect::action('MenusController@index');
+        $variables = $request->exists('stock_period_id') ? ['stock_period' => $request->get('stock_period_id')] : [];
+        return Redirect::action('SalesController@index', $variables);
 	}
 
 }

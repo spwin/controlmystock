@@ -15439,5 +15439,62 @@ var purchaseItemForm = function(){
     }
 }();
 
+var MenuItemForm = function(){
+    var form;
+    var select;
+    var units_select;
+    var value;
+    var items_units;
+    var units;
+    var type;
+    var section;
+    var item_form;
+    var recipe_form;
+    var item_type;
+    return {
+        init: function(it, i_f, rf, csf, t, f, s, us, v, iu, u){
+            item_type = it;
+            item_form = i_f;
+            recipe_form = rf;
+            section = csf;
+            type = t;
+            form = f;
+            select = s;
+            units_select = us;
+            value = v;
+            items_units = iu;
+            units = u;
+            MenuItemForm.bind();
+            MenuItemForm.changeSection(item_type);
+        },
+        changeSection: function(name){
+            console.log(name);
+            section.hide();
+            if(name == 'item'){
+                item_form.show();
+            } else if(name == 'recipe'){
+                recipe_form.show();
+            }
+        },
+        bind: function(){
+            select.on('change', function(){
+                units_select.html('');
+                var select_population = items_units[$(this).val()];
+                for(key in select_population){
+                    units_select.append('<option value="'+select_population[key]['id']+'">'+select_population[key]['title']+'</option>');
+                }
+            });
+
+            form.on('submit', function(){
+                value.val(value.val()*units[units_select.val()]);
+                return true;
+            });
+
+            type.on('change', function(){
+                MenuItemForm.changeSection($(this).val());
+            });
+        }
+    }
+}();
 
 //# sourceMappingURL=frontend.js.map

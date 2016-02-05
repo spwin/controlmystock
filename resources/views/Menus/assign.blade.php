@@ -1,8 +1,8 @@
 @extends('layouts.dashboard')
-@section('page_heading', $title.' create')
+@section('page_heading', $title.' assign')
 @section('section')
     <div class="col-sm-12">
-        <a href="{{ action ('PurchasesController@index') }}" class="mb-20px block"><i class="fa fa-arrow-left fa-fw"></i>Back to list</a>
+        <a href="{{ action ('MenusController@index') }}" class="mb-20px block"><i class="fa fa-arrow-left fa-fw"></i>Back to list</a>
         @if($errors->any())
             <div class="alert alert-danger">
                 @foreach($errors->all() as $error)
@@ -15,7 +15,7 @@
                 {{ Form::model($item, [
                 'method' => 'PATCH',
                 'action' => ['MenusController@update', $item->id],
-                'files' => true
+                'id' => 'menu-assign-form'
                 ]) }}
 
                 <div class="form-group">
@@ -33,53 +33,46 @@
                     {{ Form::text('price', null, ['class' => 'form-control', 'required' => 'required', 'disabled' => 'disabled']) }}
                 </div>
 
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" value="">Checkbox 1
-                    </label>
-                </div>
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" value="">Checkbox 2
-                    </label>
+                <div class="form-group">
+                    <label>Assign with:</label>
+                    <div class="radio">
+                        <label>
+                            {{ Form::radio('type', 'item') }} Item
+                        </label>
+                        <label>
+                            {{ Form::radio('type', 'recipe') }} Recipe
+                        </label>
+                        <label>
+                            {{ Form::radio('type', 'none') }} Unassign
+                        </label>
+                    </div>
                 </div>
 
-
-
-                <div class="form-group">
-                    {{ Form::label('file', 'Invoice file:', ['class' => 'control-label']) }}
-                    @if($item->invoice()->first())
-                    <a href="{{ action('FilesController@download', ['id' => $item->invoice()->first()->id]) }}">{{ $item->invoice()->first()->filename }}</a>
-                    @endif
-                    {{ Form::file('file', null, ['class' => 'form-control']) }}
-                </div>
-                <div class="form-group">
-                    {{ Form::label('number', 'Invoice number:', ['class' => 'control-label']) }}
-                    {{ Form::text('number', null, ['class' => 'form-control', 'placeholder' => 'VAT', 'required' => 'required']) }}
-                </div>
-                <div class="form-group">
-                    {{ Form::label('date_created', 'Date created:', ['class' => 'control-label']) }}
-                    {{ Form::text('date_created', null, ['class' => 'form-control', 'placeholder' => 'Created']) }}
-                </div>
-                <div class="form-group">
-                    {{ Form::label('date_delivered', 'Date delivered:', ['class' => 'control-label']) }}
-                    {{ Form::text('date_delivered', null, ['class' => 'form-control', 'placeholder' => 'Delivered']) }}
-                </div>
-                <div class="form-group">
-                    {{ Form::label('supplier_id', 'Supplier:', ['class' => 'control-label']) }}
-                    {{ Form::select('supplier_id', $suppliers, null, ['class' => 'form-control']) }}
-                </div>
-                <div class="form-group">
-                    {{ Form::label('stock_period_id', 'Stock period:', ['class' => 'control-label']) }}
-                    {{ Form::select('stock_period_id', $stocks_list, null, ['class' => 'form-control']) }}
-                </div>
-                <div class="form-group">
-                    <label>
-                        {{ Form::checkbox('status', null); }} Mark as paid
-                    </label>
+                <div class="changed-section-form item_form">
+                    <div class="form-group">
+                        {{ Form::label('item_id', 'Select Item to assign with:', ['class' => 'control-label']) }}
+                        {{ Form::select('item_id', $items, null, ['class' => 'form-control']) }}
+                    </div>
+                    <div class="form-group">
+                        <div class="w-40p inline-block" style="width: 40%;">
+                            {{ Form::label('value', 'Product usage in menu:', ['class' => 'control-label']) }}
+                            {{ Form::input('number', 'value', null, ['step' => 'any', 'class' => 'form-control']) }}
+                        </div>
+                        <div class="inline-block">
+                            {{ Form::select('units', $items_units['php_list'][key($items)], null, ['id' => 'units', 'class' => 'form-control', 'required' => 'required']) }}
+                        </div>
+                    </div>
                 </div>
 
-                {{ Form::submit('Update '.$title, ['class' => 'btn btn-primary']) }}
+                <div class="changed-section-form recipe_form">
+                    <div class="form-group">
+                        {{ Form::label('recipe_id', 'Select Recipe to assign with:', ['class' => 'control-label']) }}
+                        {{ Form::select('recipe_id', $recipes, null, ['class' => 'form-control']) }}
+                    </div>
+                </div>
+
+                {{ Form::hidden('checked', 1) }}
+                {{ Form::submit('Assign '.$title, ['class' => 'btn btn-primary']) }}
 
                 {{ Form::close() }}
             </div>
@@ -88,15 +81,8 @@
 @stop
 @push('scripts')
 <script type="text/javascript">
-    $(function() {
-        $( "#date_created" ).datepicker({
-            maxDate: 'today',
-            dateFormat: 'yy-mm-dd'
-        });
-        $( "#date_delivered" ).datepicker({
-            maxDate: 'today',
-            dateFormat: 'yy-mm-dd'
-        });
+    $(document).ready(function(){
+        MenuItemForm.init('{{ $item->type }}', $('.item_form'), $('.recipe_form'), $('.changed-section-form'), $('input[name="type"]'), $('#menu-assign-form'), $('select#item_id'), $('select#units'), $('input#value'), <?php echo json_encode($items_units['list']); ?>, <?php echo json_encode($items_units['factors']); ?>);
     });
 </script>
 @endpush
