@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\ItemCategories;
 use App\Models\Items;
 use App\Models\Purchases;
 use App\Models\SaleItems;
@@ -84,24 +85,35 @@ class DefaultController extends Controller {
         }
         $all_items = Items::all();
         $variance = 0;
+        $count = 0;
         foreach($all_items as $item){
+            if(!array_key_exists($item->category()->first()->id, $items)){
+                $items[$item->category()->first()->id]['category'] = $item->category()->first()->title;
+                $items[$item->category()->first()->id]['variance'] = 0;
+                $items[$item->category()->first()->id]['items'] = [];
+            }
+            $current_item = [];
             //$items[$item->id]['object'] = $item;
-            $items[$item->id]['title'] = $item->title;
-            $items[$item->id]['last_stock'] = array_key_exists($item->id, $last_stock) ? $last_stock[$item->id] : 0;
-            $items[$item->id]['current_stock'] = array_key_exists($item->id, $current_stock) ? $current_stock[$item->id] : 0;
-            $items[$item->id]['purchases'] = array_key_exists($item->id, $item_purchases) ? $item_purchases[$item->id] : ['value' => 0, 'price' => 0, 'occurrences' => 0];
-            $items[$item->id]['sales'] = array_key_exists($item->id, $item_sales) ? $item_sales[$item->id] : 0;
-            $items[$item->id]['must_stock'] = $items[$item->id]['last_stock'] + $items[$item->id]['purchases']['value'] - $items[$item->id]['sales'];
-            $items[$item->id]['stock_difference'] = $items[$item->id]['current_stock'] - $items[$item->id]['must_stock'];
-            $items[$item->id]['variance'] = round(($items[$item->id]['current_stock'] - ($items[$item->id]['last_stock'] + $items[$item->id]['purchases']['value'] - $items[$item->id]['sales'])) * $items[$item->id]['purchases']['price'], 2);
-            $variance += $items[$item->id]['variance'];
+            $current_item['title'] = $item->title;
+            $current_item['units'] = $item->units()->where(['default' => 1])->first()->unit()->first()->title;
+            $current_item['last_stock'] = array_key_exists($item->id, $last_stock) ? $last_stock[$item->id] : 0;
+            $current_item['current_stock'] = array_key_exists($item->id, $current_stock) ? $current_stock[$item->id] : 0;
+            $current_item['purchases'] = array_key_exists($item->id, $item_purchases) ? $item_purchases[$item->id] : ['value' => 0, 'price' => 0, 'occurrences' => 0];
+            $current_item['sales'] = array_key_exists($item->id, $item_sales) ? $item_sales[$item->id] : 0;
+            $current_item['must_stock'] = $current_item['last_stock'] + $current_item['purchases']['value'] - $current_item['sales'];
+            $current_item['stock_difference'] = $current_item['current_stock'] - $current_item['must_stock'];
+            $current_item['variance'] = round(($current_item['current_stock'] - ($current_item['last_stock'] + $current_item['purchases']['value'] - $current_item['sales'])) * $current_item['purchases']['price'], 2);
+            $variance += $current_item['variance'];
+            $items[$item->category()->first()->id]['variance'] += $current_item['variance'];
+            $items[$item->category()->first()->id]['items'][$item->id] = $current_item;
+            $count++;
         }
-        echo '<pre style="display: none;">';
-        print_r($items);
-        echo '</pre>';
 		return view('Default.index')->with(array(
             'last_period' => $last_period,
-            'last_stock_summary_items' => $items
+            'last_stock_summary_items' => $items,
+            'variance' => $variance,
+            'items' => $items,
+            'count' => $count
         ));
 	}
 
