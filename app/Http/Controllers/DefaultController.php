@@ -135,9 +135,9 @@ class DefaultController extends Controller {
                                 $usage = $this->countUsageFromRecipe($recipe);
                                 foreach($usage as $key => $use){
                                     if(array_key_exists($key, $item_sales)){
-                                        $item_sales[$key] += $use;
+                                        $item_sales[$key] += ($sale_item->quantity * $use);
                                     } else {
-                                        $item_sales[$key] = $use;
+                                        $item_sales[$key] = ($sale_item->quantity * $use);
                                     }
                                 }
                             }
