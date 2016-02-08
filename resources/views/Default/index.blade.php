@@ -54,7 +54,7 @@
                             @foreach ($item['items'] as $id => $single)
                                 <tr class="{{ $single['variance'] >= 0 ? 'success' : 'danger' }}">
                                     <td>{{ $id }}</td>
-                                    <td>{{ $single['title'] }}</td>
+                                    <td><a href="{{ action('ItemsController@show', $id) }}">{{ $single['title'] }}</a></td>
                                     <td>£ {{ $single['purchases']['price'] }}</td>
                                     <td>{{ $single['last_stock'] }} {{ $single['units'] }}</td>
                                     <td>{{ $single['purchases']['value'] }} {{ $single['units'] }}</td>
