@@ -237,8 +237,8 @@ class DefaultController extends Controller {
             $count++;
         }
         $summary_stock = Items::select('count(*)')->whereRaw('not exists (select 1 from stock_items where stock_items.stock_period_id = '.$current_period.' and stock_items.item_id = items.id)')->count();
-		$summary_invoices = Purchases::where(['stock_period_id' => $current_period])->count();
-        $summary_sales = Sales::where(['stock_period_id' => $current_period])->count();
+		$summary_invoices = Purchases::where(['stock_period_id' => $last_period])->count();
+        $summary_sales = Sales::where(['stock_period_id' => $last_period])->count();
         $summary_menu = Menu::where(['checked' => 0])->count();
         return view('Default.index')->with(array(
             'last_period' => $last_period,

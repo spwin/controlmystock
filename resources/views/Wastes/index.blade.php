@@ -30,6 +30,7 @@
                                 <th>ID</th>
                                 <th>Type</th>
                                 <th>Title</th>
+                                <th>Reason</th>
                                 <th>Created</th>
                                 <th>Actions</th>
                             </tr>
@@ -58,6 +59,7 @@
                                             {{ $item->menu_count ? $item->menu_count.' x' : '' }} {{ $item->menu()->first()->title }}
                                         @endif
                                     </td>
+                                    <td>{{ $item->reason->first()->reason }}</td>
                                     <td>{{ $item->created_at }}</td>
                                     <td>
                                         {{ $item->type ? '<a href="'.action('WastesController@edit', $item->id).'" class="btn btn-warning btn-xs">Edit</a>' : '' }}
@@ -67,6 +69,7 @@
                                         'class' => 'inline-block',
                                         'onclick'=>'return confirm("Are you sure?")'
                                         ]) }}
+                                        {{ Form::hidden('stock_period', $period) }}
                                         {{ Form::submit('Delete', ['class' => 'btn btn-danger btn-xs']) }}
                                         {{ Form::close() }}
                                     </td>

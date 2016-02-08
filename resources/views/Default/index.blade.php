@@ -84,11 +84,11 @@
     </div>
     <div class="row">
         <div class="col-lg-10">
-            <h1>Current period summary</h1>
+            <h1>Last period summary</h1>
             <hr>
             <div class="tasks">
                 <div class="task">
-                    <div class="task-heading"><i class="fa-circle fa fa-fw {{ $summary['stock'] > 0 ? 'text-danger' : 'text-success' }}"></i> Opening stock</div>
+                    <div class="task-heading"><i class="fa-circle fa fa-fw {{ $summary['stock'] > 0 ? 'text-danger' : 'text-success' }}"></i> Closing stock</div>
                     <div class="task-content">
                         @if($summary['stock'] > 0)
                             <div class="task-line text-warning"><i class="fa-warning fa fa-fw"></i> {{ $summary['stock'] }} items have no opening stock. <a href="{{ action('StockCheckController@index', ['filter' => 'without_stock']) }}">Fix this!</a></div>
@@ -101,7 +101,7 @@
                     <div class="task-heading"><i class="fa-circle fa fa-fw {{ $summary['invoices'] == 0 || $summary['no_price'] > 0 ? 'text-danger' : 'text-success' }}"></i> Invoices</div>
                     <div class="task-content">
                         @if($summary['invoices'] == 0)
-                            <div class="task-line text-danger"><i class="fa-warning fa fa-fw"></i> No purchases have been added to this period. <a href="{{ action('PurchasesController@index') }}">Fix this!</a></div>
+                            <div class="task-line text-danger"><i class="fa-warning fa fa-fw"></i> No purchases have been added to last period. <a href="{{ action('PurchasesController@index') }}">Fix this!</a></div>
                         @endif
                         @if($summary['no_price'] > 0)
                             <div class="task-line text-warning"><i class="fa-warning fa fa-fw"></i> {{ $summary['no_price'] }} item(s) have no price set. <a href="{{ action('ItemsController@prices') }}">Fix this!</a></div>
@@ -121,6 +121,7 @@
                         @endif
                     </div>
                 </div>
+                <!--
                 <div class="task">
                     <div class="task-heading"><i class="fa-circle fa fa-fw {{ $summary['menu'] > 0 ? 'text-danger' : 'text-success' }}"></i> Menu</div>
                     <div class="task-content">
@@ -131,17 +132,7 @@
                         @endif
                     </div>
                 </div>
-                <div class="task">
-                    <div class="task-heading"><i class="fa-circle fa fa-fw {{ $summary['menu'] > 0  || $summary['sales'] == 0 || $summary['invoices'] == 0 || $summary['stock'] > 0 || $summary['no_price'] > 0 ? 'text-danger' : 'text-success' }}"></i> Close stock period</div>
-                    <div class="task-content">
-                        @if($summary['menu'] == 0 && $summary['sales'] > 0 && $summary['invoices'] > 0 && $summary['stock'] == 0 && $summary['no_price'] == 0)
-                            <div class="task-line text-success"><i class="fa-check fa fa-fw"></i> Everything is fine.</div>
-                            <a href="{{ action('StockPeriodsController@index') }}" class="btn btn-success btn-large mt-10px ml-10px">Close period</a>
-                        @else
-                            <div class="task-line text-warning"><i class="fa-warning fa fa-fw"></i> Fix errors before closing this period.</div>
-                        @endif
-                    </div>
-                </div>
+                -->
             </div>
         </div>
     </div>

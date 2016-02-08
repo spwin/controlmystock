@@ -174,13 +174,18 @@ class WastesController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy($id, Request $request)
 	{
 		$waste = Wastes::findOrFail($id);
         $waste->delete();
         Helper::add(DB::getPdo()->lastInsertId(), 'deleted waste (ID: '.DB::getPdo()->lastInsertId().')');
         Session::flash('flash_message', $this->title.' successfully deleted!');
-        return Redirect::action('WastesController@index');
+        $input = $request->all();
+        $variables = [];
+        if(array_key_exists('stock_period', $input)){
+            $variables['stock_period'] = $input['stock_period'];
+        }
+        return Redirect::action('WastesController@index', $variables);
 	}
 
 }
