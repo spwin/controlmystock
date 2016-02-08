@@ -120,7 +120,6 @@
                         @endif
                     </div>
                 </div>
-                <!--
                 <div class="task">
                     <div class="task-heading"><i class="fa-circle fa fa-fw {{ $summary['menu'] > 0 ? 'text-danger' : 'text-success' }}"></i> Menu</div>
                     <div class="task-content">
@@ -131,7 +130,6 @@
                         @endif
                     </div>
                 </div>
-                -->
             </div>
         </div>
     </div>
