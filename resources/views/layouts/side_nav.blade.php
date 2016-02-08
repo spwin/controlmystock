@@ -34,6 +34,9 @@
                     <li {{ (Request::is('*items/items*') ? 'class="active"' : '') }}>
                         <a href="{{ action('ItemsController@index') }}"> Items</a>
                     </li>
+                    <li {{ (Request::is('*items/prices*') ? 'class="active"' : '') }}>
+                        <a href="{{ action('ItemsController@prices') }}"> Prices</a>
+                    </li>
                 </ul>
             </li>
             <li {{ (Request::is('*recipes*') ? 'class="active"' : '') }}>

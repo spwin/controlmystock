@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\Purchases;
 use Helper;
 use App\Http\Requests;
 use App\Models\Units;
@@ -92,6 +93,32 @@ class ItemsController extends Controller {
         Session::flash('flash_message', $this->title.' successfully deleted!');
 
         return Redirect::action('ItemsController@index');
+    }
+
+    public function prices(){
+        $items = Items::whereRaw('not exists (select 1 from item_purchases where item_purchases.item_id = items.id)')->orderBy('items.price', 'ASC')->get();
+        return view('Items.prices')->with(array(
+            'title' => 'Items without price',
+            'items' => $items
+        ));
+    }
+
+    public function setPrice($id){
+        $item = Items::findOrFail($id);
+        return view('Items.setprice')->with(array(
+            'title' => 'Set price for Item',
+            'item' => $item
+        ));
+    }
+
+    public function updatePrice($id, Request $request){
+        $item = Items::findOrFail($id);
+        $input = $request->all();
+        $item->fill($input)->save();
+        Helper::add($item->id, 'set price for item '.$item->title);
+        Session::flash('flash_message', $this->title.' price added!');
+
+        return Redirect::action('ItemsController@prices');
     }
 
 }

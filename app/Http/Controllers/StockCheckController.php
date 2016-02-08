@@ -78,10 +78,6 @@ class StockCheckController extends Controller {
 
     public function store(Request $request){
         $input = $request->all();
-        if($input['value'] == 0){
-            Session::flash('flash_message', 'Quantity must be different to 0');
-            return Redirect::action('StockCheckController@edit', ['item_id' => $input['item_id']])->withInput();
-        }
         $item = Items::findOrFail($input['item_id']);
         $unit = ItemUnits::findOrFail($input['unit_id']);
         $value = $input['value'];

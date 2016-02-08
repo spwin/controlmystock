@@ -18,8 +18,20 @@ label,
 .no-hover.btn-success:hover {
   background-color: #5cb85c;
 }
+.no-hover.btn-danger:hover {
+  background-color: #d9534f;
+}
 .right {
   float: right;
+}
+.tasks .task {
+  margin-bottom: 20px;
+}
+.tasks .task .task-heading {
+  font-size: 26px;
+}
+.tasks .task .task-content {
+  margin-left: 35px;
 }
 
 /*# sourceMappingURL=app.css.map */

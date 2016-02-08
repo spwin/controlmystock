@@ -15,7 +15,9 @@ Route::group(['prefix' => 'items', 'middleware' => 'auth'], function () {
     Route::get('item-categories/create/{parent}', ['uses' =>'ItemCategoriesController@create']);
 
     Route::resource('items', 'ItemsController');
-
+    Route::get('prices', ['uses' =>'ItemsController@prices']);
+    Route::get('set-price/{id}', ['uses' =>'ItemsController@setPrice']);
+    Route::post('update-price/{id}', ['uses' =>'ItemsController@updatePrice']);
     Route::resource('item-units', 'ItemUnitsController');
 
     Route::get('item-units/index/{item}', ['uses' =>'ItemUnitsController@index']);

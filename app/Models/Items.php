@@ -7,7 +7,8 @@ class Items extends Model {
     protected $fillable = [
         'title',
         'category_id',
-        'stock'
+        'stock',
+        'price'
     ];
 
     public function category() {

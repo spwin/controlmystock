@@ -70,6 +70,7 @@ class DefaultController extends Controller {
         $item_wastes = [];
         $items = [];
         $wastage = [];
+        $items_without_price = 0;
         if($last_period){
             $purchases = Purchases::orderBy('date_created', 'ASC')->where(['stock_period_id' => $last_period])->get();
             foreach($purchases as $purchase){
@@ -217,6 +218,12 @@ class DefaultController extends Controller {
                     $value = $item->value;
                     if($value == 0) $value = 1;
                     $price = $item_price->price/$value;
+                } else {
+                    if($item->price){
+                        $price = $item->price;
+                    } else {
+                        $items_without_price++;
+                    }
                 }
                 $current_item['purchases'] = ['value' => 0, 'price' => $price, 'occurrences' => 0];
             }
@@ -240,7 +247,7 @@ class DefaultController extends Controller {
             'items' => $items,
             'count' => $count,
             'wastage' => $wastage,
-            'summary' => ['stock' => $summary_stock, 'invoices' => $summary_invoices, 'sales' => $summary_sales, 'menu' => $summary_menu]
+            'summary' => ['stock' => $summary_stock, 'invoices' => $summary_invoices, 'sales' => $summary_sales, 'menu' => $summary_menu, 'no_price' => $items_without_price]
         ));
 	}
 
