@@ -14,7 +14,7 @@
             <a href="{{ action('RecipeItemsController@create', ['recipe_id' => $recipe->id, 'type' => 'recipe']) }}" class="btn btn-primary btn-large ml-10px"><i class="fa-plus-circle fa fa-fw"></i>Add recipe</a>
         </div>
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-8">
                 @section ('table_panel_title', $title)
                 @section ('table_panel_body')
                         <table class="table">

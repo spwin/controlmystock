@@ -4,7 +4,7 @@
     <div class="col-sm-12">
         <a href="{{ action ('RecipesController@index') }}" class="mb-20px block"><i class="fa fa-arrow-left fa-fw"></i>Back to Items list</a>
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-8">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">Menu</h3>

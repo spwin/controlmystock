@@ -16,7 +16,6 @@
     }
     ul.summary{
         list-style: none;
-        display: none;
     }
     ul.summary li.header{
         font-size: 24px;

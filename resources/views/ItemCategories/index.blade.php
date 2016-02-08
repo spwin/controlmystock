@@ -9,7 +9,7 @@
         @endif
         <a href="{{ action ('ItemCategoriesController@create') }}" class="mb-20px block"><i class="fa fa-plus-circle fa-fw"></i>Add {{ $title }}</a>
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-8">
                 <div class="tree well">
                     <ul>
                         <li>
@@ -26,7 +26,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-8">
                 @section ('table_panel_title', $title)
                 @section ('table_panel_body')
                     <table class="table">

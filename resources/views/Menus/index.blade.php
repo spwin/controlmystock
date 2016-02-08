@@ -26,7 +26,7 @@
                 {{ Form::close() }}
             </p>
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-10">
                 @section ('table_panel_title', $title)
                 @section ('table_panel_body')
                         <table class="table">

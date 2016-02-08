@@ -9,7 +9,7 @@
             </div>
         @endif
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-4">
                 {{ Form::open([
                 'action' => ['StockCheckController@index'],
                 'method' => 'GET',
@@ -25,7 +25,7 @@
         {{ $search ? '<h3>'.(count($items) > 0 ? count($items).' ' : 'no ').'results for "'.$search.'" <a href="'.action('StockCheckController@index').'">(clear)</a></h3>' : '' }}
         @if(count($items) > 0)
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-10">
                 @section ('table_panel_title')
                     @if($filter == 'without_stock')
                         Items with not checked current stock
