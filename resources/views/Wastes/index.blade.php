@@ -59,7 +59,7 @@
                                             {{ $item->menu_count ? $item->menu_count.' x' : '' }} {{ $item->menu()->first()->title }}
                                         @endif
                                     </td>
-                                    <td>{{ $item->reason->first()->reason }}</td>
+                                    <td>{{ $item->reason()->first()->reason }}</td>
                                     <td>{{ $item->created_at }}</td>
                                     <td>
                                         {{ $item->type ? '<a href="'.action('WastesController@edit', $item->id).'" class="btn btn-warning btn-xs">Edit</a>' : '' }}
