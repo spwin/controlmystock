@@ -36,7 +36,7 @@ class Items extends Model {
     }
 
     public function menus(){
-        return $this->hasMany('App\Models\Menus', 'item_id', 'id');
+        return $this->hasMany('App\Models\Menu', 'item_id', 'id');
     }
 
     public function wastes(){

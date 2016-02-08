@@ -43,7 +43,7 @@
                             @foreach ($items as $item)
                                 <tr>
                                     <td>{{ $item->id }}</td>
-                                    <td>{{ $item->title }}</td>
+                                    <td><a href="{{ action('ItemsController@show', $item->id) }}">{{ $item->title }}</a></td>
                                     <td>{{ $item->category()->first()->title }}</td>
                                     <td>{{ $item->units()->where('default', 1)->first() ? $item->units()->where('default', 1)->first()->unit()->first()->title.' ('.$item->units()->where('default', 1)->first()->unit()->first()->group()->first()->title.')' : '' }} {{ '<a href="'.action('ItemUnitsController@index', $item->id).'" class="btn btn-warning btn-xs">Manage</a>' }}</td>
                                     <td>{{ $item->created_at }}</td>

@@ -121,4 +121,12 @@ class ItemsController extends Controller {
         return Redirect::action('ItemsController@prices');
     }
 
+    public function show($id){
+        $item = Items::with('recipes')->findOrFail($id);
+        return view('Items.show')->with(array(
+            'title' => $this->title,
+            'item' => $item
+        ));
+    }
+
 }
