@@ -45,7 +45,7 @@
                                 <th>This period</th>
                                 <th>Units</th>
                                 <th>Last modified</th>
-                                <th>History</th>
+
                                 <th>Actions</th>
                             </tr>
                             </thead>
@@ -58,7 +58,7 @@
                                     <td>{{ ($item->stock()->where(['stock_period_id' => $period])->first() ? $item->stock()->where(['stock_period_id' => $period])->first()->stock : '0').' '.($item->units()->where(['default' => 1])->first() ? $item->units()->where(['default' => 1])->first()->unit()->first()->title : '') }}</td>
                                     <td><a href="{{ action('ItemUnitsController@index', $item->id) }}" class="btn btn-primary btn-xs">Manage</a> {{ $item->units()->where(['default' => 1])->first() ? $item->units()->where(['default' => 1])->first()->unit()->first()->title : '' }}</td>
                                     <td>{{ $item->stock()->orderBy('updated_at', 'DESC')->first() ? $item->stock()->orderBy('updated_at', 'DESC')->first()->updated_at : '' }}</td>
-                                    <td><a href="{{ action('StockCheckController@history', $item->id) }}" class="btn btn-xs btn-warning">Item history</a></td>
+                                    
                                     <td>
                                         <a href="{{ action('StockCheckController@edit', $item->id) }}" class="btn btn-xs btn-success">Edit stock</a>
                                     </td>
