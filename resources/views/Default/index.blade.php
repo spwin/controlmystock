@@ -82,9 +82,9 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-10">
-            <h1>Last period summary</h1>
-            <hr>
+        <h1>Last period summary</h1>
+        <hr>
+        <div class="col-lg-8">
             <div class="tasks">
                 <div class="task">
                     <div class="task-heading"><i class="fa-circle fa fa-fw {{ $summary['stock'] > 0 ? 'text-danger' : 'text-success' }}"></i> Closing stock</div>
@@ -132,6 +132,13 @@
                 </div>
             </div>
         </div>
+        <div class="col-lg-4">
+            @section ('cchart3_panel_title','TOP 10 Sales')
+            @section ('cchart3_panel_body')
+                <div style="max-width:400px; margin:0 auto;">@include('widgets.charts.cdonutchart')</div>
+            @endsection
+            @include('widgets.panel', array('header'=>true, 'as'=>'cchart3'))
+        </div>
     </div>
 </div>
 
@@ -151,6 +158,10 @@
         var pdata = <?php echo json_encode($wastage); ?>;
         var cpie = document.getElementById("cpie").getContext("2d");
         new Chart(cpie).Pie(pdata, { responsive: true});
+
+        var ddata = <?php echo json_encode($sales); ?>;
+        var cdonut = document.getElementById("cdonut").getContext("2d");
+        new Chart(cdonut).Doughnut(ddata, { responsive: true});
     });
 </script>
 @endpush

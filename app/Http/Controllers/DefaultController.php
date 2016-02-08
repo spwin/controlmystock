@@ -71,6 +71,7 @@ class DefaultController extends Controller {
         $item_wastes = [];
         $items = [];
         $wastage = [];
+        $sales_chart = [];
         $items_without_price = 0;
         $period = null;
         if($last_period){
@@ -112,9 +113,16 @@ class DefaultController extends Controller {
 
             $sales = Sales::where(['stock_period_id' => $last_period])->get();
             foreach($sales as $sale){
-                foreach($sale->sales()->get() as $sale_item){
+                foreach($sale->sales()->orderBy('quantity', 'DESC')->get() as $sale_item){
                     $menu = $sale_item->menu()->first();
                     if($menu){
+                        $color = $this->rand_color();
+                        $sales_chart[$menu->id] = [
+                            'value' => $sale_item->quantity,
+                            'color' => $color,
+                            'highlight' => $this->alter_brightness($color, 20),
+                            'label' => $menu->title
+                        ];
                         if($menu->type == 'item'){
                             if(array_key_exists($menu->item_id, $item_sales)){
                                 $item_sales[$menu->item_id] += ($menu->value * $sale_item->quantity);
@@ -251,6 +259,7 @@ class DefaultController extends Controller {
             'variance' => $variance,
             'items' => $items,
             'count' => $count,
+            'sales' => count($sales_chart) > 10 ? array_slice($sales_chart, 0, 10) : $sales_chart,
             'wastage' => $wastage,
             'summary' => ['stock' => $summary_stock, 'invoices' => $summary_invoices, 'sales' => $summary_sales, 'menu' => $summary_menu, 'no_price' => $items_without_price]
         ));

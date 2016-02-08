@@ -1,2 +1,2 @@
 
-<canvas class ="round" id="cdonut" width="250" height="195"></canvas>
+<canvas class ="round" id="cdonut" width="350" height="300"></canvas>

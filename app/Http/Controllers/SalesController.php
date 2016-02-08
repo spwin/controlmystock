@@ -139,7 +139,7 @@ class SalesController extends Controller {
                     'menu_id' => $menu->id,
                     'sale_id' => $sale->id,
                     'price' => $item['price'],
-                    'total_price' => round($item['price']*$item['quantity'])
+                    'total_price' => round($item['price']*$item['quantity'], 2)
                 ];
                 SaleItems::create($data);
             }
