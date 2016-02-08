@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Wastes extends Model {
 
-	protected $fillable = ['type', 'item_id', 'value', 'recipe_id', 'menu_id', 'stock_period_id', 'reason_id'];
+	protected $fillable = ['type', 'item_id', 'value', 'recipe_id', 'menu_id', 'stock_period_id', 'reason_id', 'recipe_count', 'menu_count'];
 
     public function reason(){
         return $this->hasOne('App\Models\WasteReasons', 'id', 'reason_id');

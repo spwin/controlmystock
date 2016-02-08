@@ -53,7 +53,7 @@
                     </div>
                     <div class="form-group">
                         <div class="w-40p inline-block" style="width: 40%;">
-                            {{ Form::label('value', 'Product usage in menu:', ['class' => 'control-label']) }}
+                            {{ Form::label('value', 'Wastage:', ['class' => 'control-label']) }}
                             {{ Form::input('number', 'value', null, ['step' => 'any', 'class' => 'form-control']) }}
                         </div>
                         <div class="inline-block">
@@ -64,15 +64,27 @@
 
                 <div class="changed-section-form recipe_form">
                     <div class="form-group">
-                        {{ Form::label('recipe_id', 'Select Recipe to assign with:', ['class' => 'control-label']) }}
+                        {{ Form::label('recipe_id', 'Select recipe:', ['class' => 'control-label']) }}
                         {{ Form::select('recipe_id', $recipes, null, ['class' => 'form-control']) }}
+                    </div>
+                    <div class="form-group">
+                        <div class="w-40p inline-block" style="width: 40%;">
+                            {{ Form::label('value', 'Quantity:', ['class' => 'control-label']) }}
+                            {{ Form::input('number', 'recipe_count', null, ['step' => 'any', 'class' => 'form-control']) }}
+                        </div>
                     </div>
                 </div>
 
                 <div class="changed-section-form menu_form">
                     <div class="form-group">
-                        {{ Form::label('menu_id', 'Select Recipe to assign with:', ['class' => 'control-label']) }}
+                        {{ Form::label('menu_id', 'Select item from menu:', ['class' => 'control-label']) }}
                         {{ Form::select('menu_id', $menus, null, ['class' => 'form-control']) }}
+                    </div>
+                    <div class="form-group">
+                        <div class="w-40p inline-block" style="width: 40%;">
+                            {{ Form::label('value', 'Quantity:', ['class' => 'control-label']) }}
+                            {{ Form::input('number', 'menu_count', null, ['step' => 'any', 'class' => 'form-control']) }}
+                        </div>
                     </div>
                 </div>
 
@@ -136,7 +148,9 @@
                     });
 
                     form.on('submit', function(){
-                        value.val(value.val()*units[units_select.val()]);
+                        if(item_type == 'item') {
+                            value.val(value.val() * units[units_select.val()]);
+                        }
                         return true;
                     });
 

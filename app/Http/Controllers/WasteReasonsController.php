@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\Wastes;
 use Helper;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;

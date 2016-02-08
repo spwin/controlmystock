@@ -1,5 +1,5 @@
 @extends('layouts.dashboard')
-@section('page_heading','Last period info<h5>(01 January 2016 - 02 February 2016)</h5>')
+@section('page_heading','Last period info')
 @section('section')
 <!-- /.row -->
 <style>
@@ -74,6 +74,26 @@
             @endforeach
             </ul>
         </div>
+        <div class="col-lg-2">
+            @section ('cchart2_panel_title','Wastes')
+            @section ('cchart2_panel_body')
+                <div style="max-width:400px; margin:0 auto;">@include('widgets.charts.cpiechart')</div>
+            @endsection
+            @include('widgets.panel', array('header'=>true, 'as'=>'cchart2'))
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-10">
+            <h1>Current period summary</h1>
+            <div class="tasks">
+                <div class="task">
+                    <div class="task-heading"><span class="task-number">1</span> Opening stock</div>
+                    <div class="task-content">
+                        <i class="fa-warning fa fa-fw"></i> {{ $summary['stock'] }} items have no opening stock
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -89,6 +109,10 @@
             e.preventDefault();
             $(this).parent().find('.table-container').slideToggle('fast');
         });
+
+        var pdata = <?php echo json_encode($wastage); ?>;
+        var cpie = document.getElementById("cpie").getContext("2d");
+        new Chart(cpie).Pie(pdata, { responsive: true});
     });
 </script>
 @endpush

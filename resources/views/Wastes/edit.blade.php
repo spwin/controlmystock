@@ -67,12 +67,24 @@
                         {{ Form::label('recipe_id', 'Select Recipe to assign with:', ['class' => 'control-label']) }}
                         {{ Form::select('recipe_id', $recipes, null, ['class' => 'form-control']) }}
                     </div>
+                    <div class="form-group">
+                        <div class="w-40p inline-block" style="width: 40%;">
+                            {{ Form::label('value', 'Quantity:', ['class' => 'control-label']) }}
+                            {{ Form::input('number', 'recipe_count', null, ['step' => 'any', 'class' => 'form-control']) }}
+                        </div>
+                    </div>
                 </div>
 
                 <div class="changed-section-form menu_form">
                     <div class="form-group">
                         {{ Form::label('menu_id', 'Select Recipe to assign with:', ['class' => 'control-label']) }}
                         {{ Form::select('menu_id', $menus, null, ['class' => 'form-control']) }}
+                    </div>
+                    <div class="form-group">
+                        <div class="w-40p inline-block" style="width: 40%;">
+                            {{ Form::label('value', 'Quantity:', ['class' => 'control-label']) }}
+                            {{ Form::input('number', 'menu_count', null, ['step' => 'any', 'class' => 'form-control']) }}
+                        </div>
                     </div>
                 </div>
 

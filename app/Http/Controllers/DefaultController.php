@@ -1,7 +1,9 @@
 <?php namespace App\Http\Controllers;
 
 use App\Models\ItemCategories;
+use App\Models\ItemPurchases;
 use App\Models\Items;
+use App\Models\Menu;
 use App\Models\Purchases;
 use App\Models\Recipes;
 use App\Models\SaleItems;
@@ -31,6 +33,27 @@ class DefaultController extends Controller {
         }
         return $array;
     }
+
+    function rand_color() {
+        return '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
+    }
+
+    function alter_brightness($colourstr, $steps) {
+        $colourstr = str_replace('#','',$colourstr);
+        $rhex = substr($colourstr,0,2);
+        $ghex = substr($colourstr,2,2);
+        $bhex = substr($colourstr,4,2);
+
+        $r = hexdec($rhex);
+        $g = hexdec($ghex);
+        $b = hexdec($bhex);
+
+        $r = max(0,min(255,$r + $steps));
+        $g = max(0,min(255,$g + $steps));
+        $b = max(0,min(255,$b + $steps));
+
+        return '#'.dechex($r).dechex($g).dechex($b);
+    }
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -46,6 +69,7 @@ class DefaultController extends Controller {
         $item_sales = [];
         $item_wastes = [];
         $items = [];
+        $wastage = [];
         if($last_period){
             $purchases = Purchases::orderBy('date_created', 'ASC')->where(['stock_period_id' => $last_period])->get();
             foreach($purchases as $purchase){
@@ -111,8 +135,19 @@ class DefaultController extends Controller {
                 }
             }
 
-            $wastes = Wastes::where(['stock_period_id' => $current_period])->get();
+            $wastes = Wastes::where(['stock_period_id' => $last_period])->get();
             foreach($wastes as $waste){
+                if(array_key_exists($waste->reason()->first()->id, $wastage)){
+                    $wastage[$waste->reason()->first()->id]['value'] = $wastage[$waste->reason()->first()->id]['value']+1;
+                } else {
+                    $color = $this->rand_color();
+                    $wastage[$waste->reason()->first()->id] = [
+                        'value' => 1,
+                        'color' => $color,
+                        'highlight' => $this->alter_brightness($color, 20),
+                        'label' => $waste->reason()->first()->reason
+                    ];
+                }
                 if($waste->type == 'item'){
                     if(array_key_exists($waste->item_id, $item_wastes)){
                         $item_wastes[$waste->item_id] += $waste->value;
@@ -125,9 +160,9 @@ class DefaultController extends Controller {
                         $usage = $this->countUsageFromRecipe($recipe);
                         foreach($usage as $key => $use){
                             if(array_key_exists($key, $item_wastes)){
-                                $item_wastes[$key] += $use;
+                                $item_wastes[$key] += ($waste->recipe_count * $use);
                             } else {
-                                $item_wastes[$key] = $use;
+                                $item_wastes[$key] = ($waste->recipe_count * $use);
                             }
                         }
                     }
@@ -136,9 +171,9 @@ class DefaultController extends Controller {
                     if($menu){
                         if($menu->type == 'item'){
                             if(array_key_exists($menu->item_id, $item_wastes)){
-                                $item_wastes[$menu->item_id] += $menu->value;
+                                $item_wastes[$menu->item_id] += ($waste->menu_count * $menu->value);
                             } else {
-                                $item_wastes[$menu->item_id] = $menu->value;
+                                $item_wastes[$menu->item_id] = ($waste->menu_count * $menu->value);
                             }
                         } elseif ($menu->type == 'recipe'){
                             $recipe = $menu->recipe()->first();
@@ -146,9 +181,9 @@ class DefaultController extends Controller {
                                 $usage = $this->countUsageFromRecipe($recipe);
                                 foreach($usage as $key => $use){
                                     if(array_key_exists($key, $item_wastes)){
-                                        $item_wastes[$key] += $use;
+                                        $item_wastes[$key] += ($waste->menu_count * $use);
                                     } else {
-                                        $item_wastes[$key] = $use;
+                                        $item_wastes[$key] = ($waste->menu_count * $use);
                                     }
                                 }
                             }
@@ -173,7 +208,18 @@ class DefaultController extends Controller {
             $current_item['wastage'] = array_key_exists($item->id, $item_wastes) ? $item_wastes[$item->id] : 0;
             $current_item['last_stock'] = array_key_exists($item->id, $last_stock) ? $last_stock[$item->id] : 0;
             $current_item['current_stock'] = array_key_exists($item->id, $current_stock) ? $current_stock[$item->id] : 0;
-            $current_item['purchases'] = array_key_exists($item->id, $item_purchases) ? $item_purchases[$item->id] : ['value' => 0, 'price' => 0, 'occurrences' => 0];
+            if(array_key_exists($item->id, $item_purchases)){
+                $current_item['purchases'] = $item_purchases[$item->id];
+            } else {
+                $price = 0;
+                $item_price = ItemPurchases::where(['item_id' => $item->id])->orderBy('created_at', 'DESC')->first();
+                if($item_price){
+                    $value = $item->value;
+                    if($value == 0) $value = 1;
+                    $price = $item_price->price/$value;
+                }
+                $current_item['purchases'] = ['value' => 0, 'price' => $price, 'occurrences' => 0];
+            }
             $current_item['sales'] = array_key_exists($item->id, $item_sales) ? $item_sales[$item->id] : 0;
             $current_item['must_stock'] = $current_item['last_stock'] + $current_item['purchases']['value'] - $current_item['sales'] - $current_item['wastage'];
             $current_item['stock_difference'] = $current_item['current_stock'] - $current_item['must_stock'];
@@ -183,12 +229,18 @@ class DefaultController extends Controller {
             $items[$item->category()->first()->id]['items'][$item->id] = $current_item;
             $count++;
         }
-		return view('Default.index')->with(array(
+        $summary_stock = Items::select('count(*)')->whereRaw('not exists (select 1 from stock_items where stock_items.stock_period_id = '.$current_period.' and stock_items.item_id = items.id)')->count();
+		$summary_invoices = Purchases::where(['stock_period_id' => $current_period])->count();
+        $summary_sales = Sales::where(['stock_period_id' => $current_period])->count();
+        $summary_menu = Menu::where(['checked' => 0])->count();
+        return view('Default.index')->with(array(
             'last_period' => $last_period,
             'last_stock_summary_items' => $items,
             'variance' => $variance,
             'items' => $items,
-            'count' => $count
+            'count' => $count,
+            'wastage' => $wastage,
+            'summary' => ['stock' => $summary_stock, 'invoices' => $summary_invoices, 'sales' => $summary_sales, 'menu' => $summary_menu]
         ));
 	}
 

@@ -53,9 +53,9 @@
                                         @if($item->type == 'item')
                                             {{ $item->value.' '.$item->item()->first()->units()->where(['default' => 1])->first()->unit()->first()->title.' of '.$item->item()->first()->title }}
                                         @elseif($item->type == 'recipe')
-                                            {{ $item->recipe()->first()->title }}
+                                            {{ $item->recipe_count ? $item->recipe_count.' x' : '' }} {{ $item->recipe()->first()->title }}
                                         @elseif($item->type == 'menu')
-                                            {{ $item->menu()->first()->title }}
+                                            {{ $item->menu_count ? $item->menu_count.' x' : '' }} {{ $item->menu()->first()->title }}
                                         @endif
                                     </td>
                                     <td>{{ $item->created_at }}</td>
