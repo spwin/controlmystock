@@ -91,7 +91,7 @@
                     <div class="task-heading"><i class="fa-circle fa fa-fw {{ $summary['stock'] > 0 ? 'text-danger' : 'text-success' }}"></i> Closing stock</div>
                     <div class="task-content">
                         @if($summary['stock'] > 0)
-                            <div class="task-line text-warning"><i class="fa-warning fa fa-fw"></i> {{ $summary['stock'] }} items have no opening stock. <a href="{{ action('StockCheckController@index', ['filter' => 'without_stock']) }}">Fix this!</a></div>
+                            <div class="task-line text-warning"><i class="fa-warning fa fa-fw"></i> {{ $summary['stock'] }} items have no closing stock. <a href="{{ action('StockCheckController@index', ['filter' => 'without_stock']) }}">Fix this!</a></div>
                         @else
                             <div class="task-line text-success"><i class="fa-check fa fa-fw"></i> Completed!</div>
                         @endif
@@ -101,7 +101,7 @@
                     <div class="task-heading"><i class="fa-circle fa fa-fw {{ $summary['invoices'] == 0 || $summary['no_price'] > 0 ? 'text-danger' : 'text-success' }}"></i> Invoices</div>
                     <div class="task-content">
                         @if($summary['invoices'] == 0)
-                            <div class="task-line text-danger"><i class="fa-warning fa fa-fw"></i> No purchases have been added to last period. <a href="{{ action('PurchasesController@index') }}">Fix this!</a></div>
+                            <div class="task-line text-danger"><i class="fa-warning fa fa-fw"></i> No purchases have been added to last period. <a href="{{ action('PurchasesController@index', ['stock_period' => $last_period, 'date_from' => $date_from, 'date_to' => $date_to]) }}">Fix this!</a></div>
                         @endif
                         @if($summary['no_price'] > 0)
                             <div class="task-line text-warning"><i class="fa-warning fa fa-fw"></i> {{ $summary['no_price'] }} item(s) have no price set. <a href="{{ action('ItemsController@prices') }}">Fix this!</a></div>
@@ -115,7 +115,7 @@
                     <div class="task-heading"><i class="fa-circle fa fa-fw {{ $summary['sales'] == 0 ? 'text-danger' : 'text-success' }}"></i> Sales</div>
                     <div class="task-content">
                         @if($summary['sales'] == 0)
-                            <div class="task-line text-danger"><i class="fa-warning fa fa-fw"></i> No sales have been added to this period. <a href="{{ action('SalesController@index') }}">Fix this!</a></div>
+                            <div class="task-line text-danger"><i class="fa-warning fa fa-fw"></i> No sales have been added to this period. <a href="{{ action('SalesController@index', ['stock_period' => $last_period]) }}">Fix this!</a></div>
                         @else
                             <div class="task-line text-success"><i class="fa-check fa fa-fw"></i> Completed!</div>
                         @endif

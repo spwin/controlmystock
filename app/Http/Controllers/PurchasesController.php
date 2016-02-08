@@ -33,6 +33,7 @@ class PurchasesController extends Controller {
             $period_list[$period->id] = 'Stock #'.$period->number.' ('.$period->date_from.' - '.($period->id == $currentPeriodId ? 'NOW' : $period->date_to).')';
             $period_dates[$period->id] = ['from' => date('Y-m-d', strtotime($period->date_from)), 'to' => date('Y-m-d', strtotime($period->date_to))];
         }
+        $running = $currentPeriodId;
         if(Input::has('stock_period')){
             $currentPeriodId = Input::get('stock_period');
         }
@@ -42,6 +43,7 @@ class PurchasesController extends Controller {
             'title' => $this->title,
             'items' => Purchases::where('date_created', '>=', $date_from)->where('date_created', '<=', $date_to)->orderBy('date_created', 'DESC')->get(),
             'period' => $currentPeriodId,
+            'running_period' => $running,
             'stocks_list' => $period_list,
             'period_dates' => $period_dates,
             'date_from' => $date_from,

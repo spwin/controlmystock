@@ -90,7 +90,7 @@
 <script type="text/javascript">
     $(document).ready(function(){
         var dates = <?php echo json_encode($period_dates); ?>;
-        var current = <?php echo $period; ?>;
+        var current = <?php echo $running_period; ?>;
         var now = '<?php echo date('Y-m-d', time()); ?>';
         function onLoad(){
             dates[current].to = now;

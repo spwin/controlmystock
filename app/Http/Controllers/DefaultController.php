@@ -9,6 +9,7 @@ use App\Models\Recipes;
 use App\Models\SaleItems;
 use App\Models\Sales;
 use App\Models\StockItem;
+use App\Models\StockPeriods;
 use App\Models\Wastes;
 use Helper;
 use App\Http\Requests;
@@ -71,6 +72,7 @@ class DefaultController extends Controller {
         $items = [];
         $wastage = [];
         $items_without_price = 0;
+        $period = null;
         if($last_period){
             $purchases = Purchases::orderBy('date_created', 'ASC')->where(['stock_period_id' => $last_period])->get();
             foreach($purchases as $purchase){
@@ -192,6 +194,7 @@ class DefaultController extends Controller {
                     }
                 }
             }
+            $period = StockPeriods::findOrFail($last_period);
         }
         $all_items = Items::all();
         $variance = 0;
@@ -242,6 +245,8 @@ class DefaultController extends Controller {
         $summary_menu = Menu::where(['checked' => 0])->count();
         return view('Default.index')->with(array(
             'last_period' => $last_period,
+            'date_from' => $period ? date('Y-m-d', strtotime($period->date_from)) : date('Y-m-d', strtotime('-30 days')),
+            'date_to' => $period ? date('Y-m-d', strtotime($period->date_to)) : date('Y-m-d', time()),
             'last_stock_summary_items' => $items,
             'variance' => $variance,
             'items' => $items,

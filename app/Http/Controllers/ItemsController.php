@@ -96,7 +96,7 @@ class ItemsController extends Controller {
     }
 
     public function prices(){
-        $items = Items::whereRaw('not exists (select 1 from item_purchases where item_purchases.item_id = items.id)')->orderBy('items.price', 'ASC')->get();
+        $items = Items::whereRaw('not exists (select 1 from item_purchases where item_purchases.item_id = items.id)')->orderBy('items.price', 'ASC')->orderBy('items.category_id', 'ASC')->orderBy('items.title', 'ASC')->get();
         return view('Items.prices')->with(array(
             'title' => 'Items without price',
             'items' => $items
