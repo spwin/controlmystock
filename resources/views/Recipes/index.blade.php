@@ -42,7 +42,7 @@
                             @foreach ($recipes as $recipe)
                                 <tr>
                                     <td>{{ $recipe->id }}</td>
-                                    <td><a href="{{ action('RecipeItemsController@index', $recipe->id) }}">{{ $recipe->title }}</a></td>
+                                    <td><a href="{{ action('RecipesController@show', $recipe->id) }}">{{ $recipe->title }}</a></td>
                                     <td>{{ $recipe->created_at }}</td>
                                     <td><a href="{{ action('RecipeItemsController@index', $recipe->id) }}" class="btn btn-primary btn-xs">Manage items</a></td>
                                     <td>

@@ -1,6 +1,5 @@
 @extends('layouts.dashboard')
-@section('page_heading', $title.' list')
-@section('body-tag', 'onload="FocusOnInput(\'q\')"')
+@section('page_heading', '"'.$item->title.'" usage in database')
 @section('section')
     <div class="col-sm-12">
         <a href="{{ action ('ItemsController@index') }}" class="mb-20px block"><i class="fa fa-arrow-left fa-fw"></i>Back to Items list</a>
@@ -52,7 +51,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach ($item->menus()->get() as $menu)
+                            @foreach ($item->menus()->where(['type' => 'item'])->get() as $menu)
                                 <tr>
                                     <td>{{ $menu->id }}</td>
                                     <td><a href="{{ action('MenusController@assign', $menu->id) }}">{{ $menu->title }}</a></td>

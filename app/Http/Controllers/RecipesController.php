@@ -67,7 +67,11 @@ class RecipesController extends Controller {
 	 */
 	public function show($id)
 	{
-		//
+		$item = Recipes::findOrFail($id);
+        return view('Recipes.show')->with(array(
+            'title' => $this->title,
+            'item' => $item
+        ));
 	}
 
 	/**
