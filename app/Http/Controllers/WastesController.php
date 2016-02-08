@@ -95,7 +95,7 @@ class WastesController extends Controller {
         Wastes::create($input);
         Helper::add(DB::getPdo()->lastInsertId(), 'added waste (ID: '.DB::getPdo()->lastInsertId().')');
         Session::flash('flash_message', $this->title.' successfully added!');
-        return Redirect::action('WastesController@index');
+        return Redirect::action('WastesController@index', ['stock_period' => $input['stock_period_id']]);
     }
 
 	/**
@@ -165,7 +165,7 @@ class WastesController extends Controller {
         $waste->save();
         Helper::add($waste->id, 'edited waste (ID: '.$waste->id.')');
         Session::flash('flash_message', $this->title.' successfully edited!');
-        return Redirect::action('WastesController@index');
+        return Redirect::action('WastesController@index', ['stock_period' => $input['stock_period_id']]);
 	}
 
 	/**
