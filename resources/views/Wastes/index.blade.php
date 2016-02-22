@@ -21,7 +21,7 @@
             {{ Form::close() }}
             <a href="{{ action ('WastesController@create', ['stock_period' => $period]) }}" class="mb-20px block"><i class="fa fa-plus-circle fa-fw"></i>Add {{ $title }} for selected period</a>
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-12">
                 @section ('table_panel_title', $title)
                 @section ('table_panel_body')
                         <table class="table">

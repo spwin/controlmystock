@@ -31,7 +31,7 @@
             {{ Form::submit('Import', ['class' => 'btn btn-success btn-xs']) }}
             {{ Form::close() }}
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-12">
                 @section ('table_panel_title', $title)
                 @section ('table_panel_body')
                         <table class="table">

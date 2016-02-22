@@ -27,7 +27,7 @@ class WastesController extends Controller {
 	 */
 	public function index()
 	{
-        $currentPeriodId = Helper::currentPeriodId();
+        $currentPeriodId = Helper::defaultPeriodId();
         $periods = StockPeriods::all();
         $period_list = array();
         foreach($periods as $period){
@@ -52,7 +52,7 @@ class WastesController extends Controller {
 	 */
 	public function create()
 	{
-        $currentPeriodId = Helper::currentPeriodId();
+        $currentPeriodId = Helper::defaultPeriodId();
         $periods = StockPeriods::all();
         $period_list = array();
         foreach($periods as $period){
@@ -118,7 +118,7 @@ class WastesController extends Controller {
 	public function edit($id)
 	{
         $waste = Wastes::findOrFail($id);
-        $currentPeriodId = Helper::currentPeriodId();
+        $currentPeriodId = Helper::defaultPeriodId();
         $periods = StockPeriods::all();
         $period_list = array();
         foreach($periods as $period){

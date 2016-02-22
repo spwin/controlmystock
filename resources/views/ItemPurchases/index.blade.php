@@ -14,7 +14,7 @@
                 <a href="{{ action('ItemPurchasesController@create', ['item_id' => $purchase->id, 'type' => 'custom']) }}" class="btn btn-primary btn-large ml-10px"><i class="fa-plus-circle fa fa-fw"></i>Add custom item</a>
             </div>
             <div class="row">
-                <div class="col-lg-8">
+                <div class="col-lg-12">
                     @section ('table_panel_title', $title)
                     @section ('table_panel_body')
                         <table class="table">
@@ -42,6 +42,7 @@
                                     <td>£ {{ $item->price }}</td>
                                     <td>{{ $item->vat ? '£ '.$item->vat : 'no VAT' }}</td>
                                     <td>
+                                        {{ '<a href="'.action('ItemPurchasesController@edit', $item->id).'" class="btn btn-warning btn-xs">Edit</a>' }}
                                         {{ Form::open([
                                         'method' => 'DELETE',
                                         'action' => ['ItemPurchasesController@destroy', $item->id],

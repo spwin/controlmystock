@@ -53,6 +53,7 @@ Route::group(['prefix' => 'history', 'middleware' => 'auth'], function () {
 Route::group(['prefix' => 'stock-periods', 'middleware' => 'auth'], function () {
     Route::resource('list', 'StockPeriodsController');
     Route::get('close/{id}', ['uses' =>'StockPeriodsController@close']);
+    Route::get('set-default/{id}', ['uses' =>'StockPeriodsController@setDefault']);
 });
 Route::group(['prefix' => 'purchases', 'middleware' => 'auth'], function () {
     Route::resource('suppliers', 'SuppliersController');
@@ -61,6 +62,7 @@ Route::group(['prefix' => 'purchases', 'middleware' => 'auth'], function () {
     Route::get('invoice/index/{id}', ['uses' =>'ItemPurchasesController@index']);
     Route::post('invoice/generate/{id}', ['uses' =>'ItemPurchasesController@generate']);
     Route::get('invoice/create/{id}/{type}', ['uses' =>'ItemPurchasesController@create']);
+    Route::post('invoice/update/{id}', ['uses' =>'ItemPurchasesController@update']);
 });
 Route::get('download/{id}', ['uses' =>'FilesController@download']);
 Route::group(['prefix' => 'menu', 'middleware' => 'auth'], function () {

@@ -116,7 +116,40 @@ class ItemPurchasesController extends Controller
      */
     public function edit($id)
     {
-        //
+        $item_purchase = ItemPurchases::findOrFail($id);
+        $purchase = $item_purchase->purchase()->first();
+        $type = $item_purchase->type;
+        if ($type == 'item') {
+            $items = ItemUnits::orderBy('default', 'DESC')->get();
+            $items_units = [];
+            foreach ($items as $item) {
+                $items_units['list'][$item->item()->first()->id][] = ['id' => $item->id, 'title' => $item->unit()->first()->title];
+                $items_units['php_list'][$item->item()->first()->id][$item->id] = $item->unit()->first()->title;
+                $items_units['factors'][$item->id] = $item->factor;
+                $items_units['item_to_unit'][$item->id] = $item->unit()->first()->id;
+            }
+            $select_items = Items::orderBy('title', 'ASC')->lists('title', 'id');
+            if ($select_items) {
+                return view('ItemPurchases.edit_item')->with(array(
+                    'title' => $this->title,
+                    'purchase' => $purchase,
+                    'items' => $select_items,
+                    'items_units' => $items_units,
+                    'type' => $type,
+                    'item' => $item_purchase
+                ));
+            } else {
+                Session::flash('flash_message', 'It looks like you have used all possible products in your invoice.');
+                return Redirect::action('ItemPurchasesController@index', $purchase->id);
+            }
+        } else {
+            return view('ItemPurchases.edit_custom')->with(array(
+                'title' => $this->title,
+                'purchase' => $purchase,
+                'type' => $type,
+                'item' => $item_purchase
+            ));
+        }
     }
 
     /**
@@ -125,9 +158,20 @@ class ItemPurchasesController extends Controller
      * @param  int $id
      * @return Response
      */
-    public function update($id)
+    public function update($id, Request $request)
     {
-        //
+        $Items = ItemPurchases::findOrFail($id);
+        $input = $request->all();
+        if ($input['type'] == 'item') {
+            $Items->fill($input)->save();
+        } else {
+            $input['value'] = $input['value_entered'];
+            $Items->fill($input)->save();
+        }
+        Helper::add($Items->id, 'edited invoice item ');
+        Session::flash('flash_message', $this->title.' successfully added!');
+
+        return Redirect::action('ItemPurchasesController@index', $request->get('purchase_id'));
     }
 
     /**

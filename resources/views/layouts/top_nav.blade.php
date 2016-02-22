@@ -8,9 +8,12 @@
     <a class="navbar-brand" href="{{ url ('') }}">Stock control v1.0</a>
 </div>
 <ul class="nav navbar-top-links navbar-right">
+    <?php $period = \Helper::getDefaultPeriod() ?>
+    {{ 'Default stock: <strong>Stock N#'.$period->number.' ('.$period->date_from.' - '.($period->date_to ? $period->date_to : 'NOW').')</strong> <a href="'.action('StockPeriodsController@index').'" class="btn btn-xs btn-success">Change</a>' }}
+
     <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-            {{{ isset(Auth::user()->name) ? Auth::user()->name : Auth::user()->email }}}
+            {{ isset(Auth::user()->name) ? Auth::user()->name : Auth::user()->email }}
             <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
         </a>
         <ul class="dropdown-menu dropdown-user">

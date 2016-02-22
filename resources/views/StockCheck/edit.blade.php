@@ -72,7 +72,7 @@
         </div>
         @if($default)
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-12">
                 @section ('table_panel_title', 'Last 10 stock changes')
                 @section ('table_panel_body')
                     <table class="table">

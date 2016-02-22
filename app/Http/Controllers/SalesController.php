@@ -25,7 +25,7 @@ class SalesController extends Controller {
 	 */
 	public function index()
 	{
-        $currentPeriodId = Helper::currentPeriodId();
+        $currentPeriodId = Helper::defaultPeriodId();
         $periods = StockPeriods::all();
         $period_list = array();
         foreach($periods as $period){
@@ -50,7 +50,7 @@ class SalesController extends Controller {
 	 */
 	public function create()
 	{
-        $currentPeriodId = Helper::currentPeriodId();
+        $currentPeriodId = Helper::defaultPeriodId();
         $periods = StockPeriods::all();
         $period_list = array();
         foreach($periods as $period){

@@ -9,13 +9,14 @@
         @endif
         @if(count($periods) > 0)
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-12">
                 @section ('table_panel_title', $title)
                 @section ('table_panel_body')
                         <table class="table">
                             <thead>
                             <tr>
                                 <th>Period number</th>
+                                <th>Default</th>
                                 <th>Period starts</th>
                                 <th>Period ends</th>
                                 <th>Action</th>
@@ -25,6 +26,7 @@
                             @foreach ($periods as $period)
                                 <tr>
                                     <td>Stock period #{{ $period->number }}</td>
+                                    <td>{{ $period->id == $default_period ? '<span class="btn-xs btn-success no-hover">default</span>' : '<a href="'.action('StockPeriodsController@setDefault', $period->id).'">Set default</a>'; }}</td>
                                     <td>{{ $period->date_from }}</td>
                                     <td>{{ $period->date_to ? $period->date_to : 'current' }}</td>
                                     <td>

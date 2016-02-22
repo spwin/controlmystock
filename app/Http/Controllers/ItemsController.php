@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\History;
 use App\Models\Purchases;
 use Helper;
 use App\Http\Requests;
@@ -88,9 +89,13 @@ class ItemsController extends Controller {
         $Items = Items::findOrFail($id);
 
         Helper::add($Items->id, 'deleted item '.$Items->title);
-        $Items->delete();
 
-        Session::flash('flash_message', $this->title.' successfully deleted!');
+        if($Items->menus()->count() > 0 ){
+            Session::flash('flash_message', $this->title.' is assigned to menu and cannot be deleted, unassign first!');
+        } else {
+            Session::flash('flash_message', $this->title.' successfully deleted!');
+            $Items->delete();
+        }
 
         return Redirect::action('ItemsController@index');
     }
@@ -122,10 +127,16 @@ class ItemsController extends Controller {
     }
 
     public function show($id){
-        $item = Items::with('recipes')->findOrFail($id);
+        $item = Items::with('recipes')->with('purchases')->findOrFail($id);
+        $history = History::where('message', 'LIKE', '%(ID '.$id.')%')->where('action', '=', 'App\Http\Controllers\StockCheckController@store ')->get();
+        echo '<pre>';
+        echo $history->count();
+        echo 'id: '.$id;
+        echo '</pre>';
         return view('Items.show')->with(array(
             'title' => $this->title,
-            'item' => $item
+            'item' => $item,
+            'history' => $history
         ));
     }
 

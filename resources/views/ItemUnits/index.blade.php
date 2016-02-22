@@ -13,7 +13,7 @@
             <a href="{{ action('ItemUnitsController@create', $item->id) }}" class="btn btn-primary btn-large"><i class="fa-plus-circle fa fa-fw"></i>Add</a>
         </div>
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-12">
                 @section ('table_panel_title', $title)
                 @section ('table_panel_body')
                         <table class="table">

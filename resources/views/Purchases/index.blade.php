@@ -23,7 +23,7 @@
             {{ Form::close() }}
             </div>
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-12">
                 @section ('table_panel_title', $title)
                 @section ('table_panel_body')
                         <table class="table">
@@ -36,6 +36,7 @@
                                 <th>Supplier</th>
                                 <th>NET</th>
                                 <th>VAT</th>
+                                <th>GROSS</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
@@ -54,6 +55,7 @@
                                     <td>{{ $item->supplier()->first() ? $item->supplier()->first()->title : '' }}</td>
                                     <td><strong>£ {{ round($item->purchases()->sum('price'), 2) }}</strong></td>
                                     <td><strong>£ {{ round($item->purchases()->sum('vat'), 2) }}</strong></td>
+                                    <td><strong>£ {{ round($item->purchases()->sum('price'), 2) + round($item->purchases()->sum('vat'), 2) }}</strong></td>
                                     <td>{{ $item->status ? '<span class="btn-success btn-xs no-hover">Paid</span>' : '<span class="btn-warning btn-xs no-hover">Pending</span>' }}</td>
                                     <td>
                                         <a href="{{ action('ItemPurchasesController@index', $item->id) }}" class="btn btn-xs btn-primary">Manage Items</a>
@@ -76,6 +78,7 @@
                             <th colspan="5" style="text-align: right;">TOTAL:</th>
                             <th>£ {{ $total_price }}</th>
                             <th>£ {{ $total_vat }}</th>
+                            <th>£ {{ $total_price+$total_vat }}</th>
                             <th></th>
                             <th></th>
                             </tbody>
@@ -94,6 +97,7 @@
         var now = '<?php echo date('Y-m-d', time()); ?>';
         function onLoad(){
             dates[current].to = now;
+            console.log(current);
         }
         function setDates(){
             var period = $('#stock_period').val();

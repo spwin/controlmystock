@@ -9,7 +9,7 @@
         @endif
         <a href="{{ action ('SalesController@index', ['stock_period' => $period]) }}" class="mb-20px block"><i class="fa fa-arrow-left fa-fw"></i>Back to sales list</a>
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-12">
                 @section ('table_panel_title', $title)
                 @section ('table_panel_body')
                         <table class="table">

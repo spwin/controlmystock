@@ -62,8 +62,8 @@ class DefaultController extends Controller {
 	 */
 	public function index()
 	{
-        $last_period = Helper::lastPeriodId();
-        $current_period = Helper::currentPeriodId();
+        $last_period = Helper::defaultPeriodId();
+        $current_period = Helper::periodAfterId($last_period);
         $item_purchases = [];
         $last_stock = [];
         $current_stock = [];
@@ -89,6 +89,7 @@ class DefaultController extends Controller {
                     }
                 }
             }
+
             foreach($item_purchases as $key => $purchase){
                 $item_purchases[$key]['price'] = $purchase['price']/$purchase['occurrences'];
             }
@@ -226,7 +227,7 @@ class DefaultController extends Controller {
                 $price = 0;
                 $item_price = ItemPurchases::where(['item_id' => $item->id])->orderBy('created_at', 'DESC')->first();
                 if($item_price){
-                    $value = $item->value;
+                    $value = $item_price->value;
                     if($value == 0) $value = 1;
                     $price = $item_price->price/$value;
                 } else {

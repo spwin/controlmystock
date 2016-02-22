@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 
 use App\Models\StockPeriods;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 
@@ -20,9 +21,11 @@ class StockPeriodsController extends Controller {
 	public function index()
 	{
         $periods = StockPeriods::orderBy('date_from', 'DESC')->get();
+		$default_period = Helper::defaultPeriodId();
 		return view('StockPeriods.index')->with(array(
             'title' => $this->title,
-            'periods' => $periods
+            'periods' => $periods,
+			'default_period' => $default_period
         ));
 	}
 
@@ -114,6 +117,11 @@ class StockPeriodsController extends Controller {
         Session::flash('flash_message', $this->title.' successfully deleted!');
 
         return Redirect::action('StockPeriodsController@index');
+	}
+
+	public function setDefault($id) {
+		Helper::setDefaultPeriodId($id);
+		return Redirect::action('StockPeriodsController@index');
 	}
 
 }

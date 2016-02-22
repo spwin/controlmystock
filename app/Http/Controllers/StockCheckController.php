@@ -151,7 +151,7 @@ class StockCheckController extends Controller {
                 $other_units[$unit->id] = $unit->unit()->first()->title;
             }
         }
-        $currentPeriodId = Helper::currentPeriodId();
+        $currentPeriodId = Helper::periodAfterId(Helper::defaultPeriodId());
         $periods = StockPeriods::all();
         $period_list = array();
         foreach($periods as $period){

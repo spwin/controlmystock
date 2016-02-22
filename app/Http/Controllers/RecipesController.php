@@ -123,9 +123,13 @@ class RecipesController extends Controller {
     {
         $Recipe = Recipes::findOrFail($id);
 
-        Session::flash('flash_message', $this->title.' successfully deleted!');
-        Helper::add($id, 'deleted recipe '.$Recipe->title.' (ID '.$Recipe->id.')');
-        $Recipe->delete();
+        if($Recipe->menus()->count() > 0 ){
+            Session::flash('flash_message', $this->title.' is assigned to menu and cannot be deleted, unassign first!');
+        } else {
+            Session::flash('flash_message', $this->title.' successfully deleted!');
+            Helper::add($id, 'deleted recipe '.$Recipe->title.' (ID '.$Recipe->id.')');
+            $Recipe->delete();
+        }
 
         return Redirect::action('RecipesController@index');
     }

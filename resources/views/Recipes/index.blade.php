@@ -25,7 +25,7 @@
         {{ $search ? '<h3>'.(count($recipes) > 0 ? count($recipes).' ' : 'no ').'results for "'.$search.'" <a href="'.action('RecipesController@index').'">(clear)</a></h3>' : '' }}
         @if(count($recipes) > 0)
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-12">
                 @section ('table_panel_title', $title)
                 @section ('table_panel_body')
                         <table class="table">

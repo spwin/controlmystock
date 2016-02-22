@@ -35,28 +35,7 @@ var lineChartData = {
 
 
 
-var ddata = [
-    {
-        value: 50,
-        color:"#F7464A",
-        highlight: "#FF5A5E",
-        label: "Red"
-    },
-    {
-        value: 300,
-        color: "#46BFBD",
-        highlight: "#5AD3D1",
-        label: "Green"
-    },
-    {
-        value: 160,
-        color: "#FDB45C",
-        highlight: "#FFC870",
-        label: "Yellow"
-    }
-]
-var cdonut = document.getElementById("cdonut").getContext("2d");
-new Chart(cdonut).Doughnut(ddata, { responsive: true});
+
 
 var bdata = {
         labels : ["January","February","March","April","May","June","July"],
