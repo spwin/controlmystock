@@ -80,6 +80,7 @@ Route::group(['prefix' => 'sales', 'middleware' => 'auth'], function () {
 Route::group(['middleware' => 'auth'], function()
 {
     Route::resource('/', 'DefaultController@index');
+    Route::get('excel/{stock}/{category}', 'DefaultController@exportExcel');
 });
 
 Route::group(['prefix' => 'wastes', 'middleware' => 'auth'], function () {

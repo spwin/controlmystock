@@ -33,6 +33,7 @@
             <ul class="summary">
             @foreach ($items as $key => $item)
                 <li class="header"><a href="" class="summary-header category-summary"><i class="fa-arrow-circle-down fa fa-fw"></i> {{ $item['category'] }} ({{ count($item['items']).' items' }}) variance: <span {{ $item['variance'] >= 0 ? 'class="text-success"' : 'class="text-danger"' }}>£ {{ $item['variance'] }}</span></a>
+                    <a href="{{ action('DefaultController@exportExcel', ['stock' => $last_period, 'category' => $key]) }}">(excel)</a>
                     <div class="table-container">
                         <table class="table">
                             <thead>

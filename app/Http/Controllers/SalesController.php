@@ -29,7 +29,7 @@ class SalesController extends Controller {
         $periods = StockPeriods::all();
         $period_list = array();
         foreach($periods as $period){
-            $period_list[$period->id] = 'Stock #'.$period->number.' ('.$period->date_from.' - '.($period->id == $currentPeriodId ? 'NOW' : $period->date_to).')';
+            $period_list[$period->id] = 'Stock #'.$period->number.' ('.$period->date_from.' - '.($period->date_to ? $period->date_to : 'NOW').')';
         }
         if(Input::has('stock_period')){
             $currentPeriodId = Input::get('stock_period');
