@@ -7,6 +7,6 @@ class Suppliers extends Model {
 	protected $fillable = ['vat', 'title', 'email', 'phone', 'address'];
 
     public function purchases(){
-        return $this->hasMany('App\Models\Purchases', 'invoice_id', 'id');
+        return $this->hasMany('App\Models\Purchases', 'supplier_id', 'id');
     }
 }

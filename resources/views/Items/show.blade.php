@@ -77,6 +77,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Invoice Nr.</th>
+                                <th>Supplier</th>
                                 <th>Quantity</th>
                                 <th>Price</th>
                                 <th>VAT</th>
@@ -89,6 +90,7 @@
                                 <tr>
                                     <td>{{ $purchase->id }}</td>
                                     <td><a href="{{ action('ItemPurchasesController@index', $purchase->purchase()->first()->id) }}">{{ $purchase->purchase()->first()->number }}</a></td>
+                                    <td><a href="{{ action('SuppliersController@show', $purchase->purchase()->first()->supplier()->first()->id) }}">{{ $purchase->purchase()->first()->supplier()->first()->title }}</a></td>
                                     <td>{{ $purchase->value }} {{ $purchase->item()->first()->units()->where(['default' => 1])->first()->unit()->first()->title }}</td>
                                     <td>£ {{ $purchase->price }}</td>
                                     <td>{{ $purchase->vat ? '£ '.$purchase->vat : 'no VAT' }}</td>

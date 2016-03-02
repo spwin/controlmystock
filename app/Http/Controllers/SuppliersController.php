@@ -22,7 +22,7 @@ class SuppliersController extends Controller {
 	{
 		return view('Suppliers.index')->with(array(
             'title' => $this->title,
-            'items' => Suppliers::all()
+            'items' => Suppliers::orderBy('title', 'ASC')->get()
         ));
 	}
 
@@ -63,7 +63,10 @@ class SuppliersController extends Controller {
 	 */
 	public function show($id)
 	{
-		//
+		return view('Suppliers.show')->with(array(
+			'title' => $this->title,
+			'item' => Suppliers::with('purchases')->findOrFail($id)
+		));
 	}
 
 	/**

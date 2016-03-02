@@ -8,7 +8,10 @@
             </div>
         @endif
             <a href="{{ action ('PurchasesController@index') }}" class="mb-20px block"><i class="fa fa-arrow-left fa-fw"></i>Back to purchases list</a>
+            <a href="{{ action ('PurchasesController@create') }}" class="mb-20px block"><i class="fa fa-plus-circle fa-fw"></i>Add new purchase</a>
             <h2><strong>Invoice Nr.{{ $purchase->number }}</strong> items</h2>
+            <p><a href="{{ action('PurchasesController@edit', $purchase->id) }}" class="btn btn-success btn-xs"><i class="fa-edit fa fa-fw"></i>Edit purchase</a></p>
+            <p>Created at: {{ $purchase->date_created }}<br/>Supplier: <a href="{{ action('SuppliersController@show', $purchase->supplier()->first()->id) }}">{{ $purchase->supplier()->first()->title }}</a></p>
             <div class="mb-20px block">
                 <a href="{{ action('ItemPurchasesController@create', ['item_id' => $purchase->id, 'type' => 'item']) }}" class="btn btn-primary btn-large"><i class="fa-plus-circle fa fa-fw"></i>Add item from list</a>
                 <a href="{{ action('ItemPurchasesController@create', ['item_id' => $purchase->id, 'type' => 'custom']) }}" class="btn btn-primary btn-large ml-10px"><i class="fa-plus-circle fa fa-fw"></i>Add custom item</a>
@@ -27,6 +30,7 @@
                                 <th>Per unit</th>
                                 <th>Price</th>
                                 <th>VAT</th>
+                                <th>GROSS</th>
                                 <th>Actions</th>
                             </tr>
                             </thead>
@@ -41,6 +45,7 @@
                                     <td>{{ $item->value == 0 ? '-' : '£ '.round($item->price/$item->value, 2) }}</td>
                                     <td>£ {{ $item->price }}</td>
                                     <td>{{ $item->vat ? '£ '.$item->vat : 'no VAT' }}</td>
+                                    <td>£ {{ $item->vat + $item->price }}</td>
                                     <td>
                                         {{ '<a href="'.action('ItemPurchasesController@edit', $item->id).'" class="btn btn-warning btn-xs">Edit</a>' }}
                                         {{ Form::open([
@@ -62,6 +67,7 @@
                                 <th colspan="5" style="text-align: right;">TOTAL:</th>
                                 <th><input name="total_price" type="text" value="{{ $total_price }}" style="width: 80px; position: absolute;"></th>
                                 <th><input name="total_vat" type="text" value="{{ $total_vat }}" style="width: 80px; position: absolute;"></th>
+                                <th>{{ $total_price + $total_vat }}</th>
                             <th>{{ Form::submit('Generate', ['class' => 'btn btn-success btn-xs']) }}</th>
                             {{ Form::close() }}
                             </tbody>

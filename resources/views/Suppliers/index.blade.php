@@ -28,7 +28,7 @@
                             @foreach ($items as $item)
                                 <tr>
                                     <td>{{ $item->id }}</td>
-                                    <td>{{ $item->title }}</td>
+                                    <td><a href="{{ action('SuppliersController@show', $item->id) }}">{{ $item->title }}</a></td>
                                     <td>{{ $item->vat }}</td>
                                     <td>{{ $item->email }}</td>
                                     <td>{{ $item->phone }}</td>

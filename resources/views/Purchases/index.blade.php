@@ -52,7 +52,7 @@
                                     <td>{{ $item->number }}</td>
                                     <td>{{ $item->date_created }}</td>
                                     <td>{{ $item->date_delivered }}</td>
-                                    <td>{{ $item->supplier()->first() ? $item->supplier()->first()->title : '' }}</td>
+                                    <td>{{ $item->supplier()->first() ? '<a href="'.action('SuppliersController@show', $item->supplier()->first()->id).'">'.$item->supplier()->first()->title.'</a>' : '' }}</td>
                                     <td><strong>£ {{ round($item->purchases()->sum('price'), 2) }}</strong></td>
                                     <td><strong>£ {{ round($item->purchases()->sum('vat'), 2) }}</strong></td>
                                     <td><strong>£ {{ round($item->purchases()->sum('price'), 2) + round($item->purchases()->sum('vat'), 2) }}</strong></td>
