@@ -15420,6 +15420,14 @@ var purchaseItemForm = function(){
             units = u;
             item_to_unit = itu;
             purchaseItemForm.bind();
+            purchaseItemForm.prepare();
+        },
+        prepare: function(){
+            units_select.html('');
+            var select_population = items_units[select.val()];
+            for(key in select_population){
+                units_select.append('<option value="'+select_population[key]['id']+'">'+select_population[key]['title']+'</option>');
+            }
         },
         bind: function(){
             select.on('change', function(){
