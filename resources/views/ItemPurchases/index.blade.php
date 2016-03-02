@@ -67,7 +67,7 @@
                                 <th colspan="5" style="text-align: right;">TOTAL:</th>
                                 <th><input name="total_price" type="text" value="{{ $total_price }}" style="width: 80px; position: absolute;"></th>
                                 <th><input name="total_vat" type="text" value="{{ $total_vat }}" style="width: 80px; position: absolute;"></th>
-                                <th>{{ $total_price + $total_vat }}</th>
+                                <th>£ {{ $total_price + $total_vat }}</th>
                             <th>{{ Form::submit('Generate', ['class' => 'btn btn-success btn-xs']) }}</th>
                             {{ Form::close() }}
                             </tbody>

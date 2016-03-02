@@ -167,7 +167,7 @@ class PurchasesController extends Controller {
         $item->update($input);
         $item->save();
         Helper::add(DB::getPdo()->lastInsertId(), 'updated invoice ID '.DB::getPdo()->lastInsertId());
-        return Redirect::action('PurchasesController@index');
+        return Redirect::action('ItemPurchasesController@index', $item->id);
 	}
 
 	/**
