@@ -168,7 +168,7 @@ class StockCheckController extends Controller {
             'actions' => $actions,
             'other_units' => $other_units,
             'period' => $currentPeriodId,
-            'stock' => StockCheck::join('stock_items', 'stock_checks.stock_item_id', '=', 'stock_items.id')->where(['stock_checks.item_id' => $id, 'stock_items.stock_period_id' => $currentPeriodId])->orderBy('stock_checks.created_at', 'DESC')->get(),
+            'stock' => StockCheck::select(['stock_items.*', 'stock_checks.*'])->join('stock_items', 'stock_checks.stock_item_id', '=', 'stock_items.id')->where(['stock_checks.item_id' => $id, 'stock_items.stock_period_id' => $currentPeriodId])->orderBy('stock_checks.created_at', 'DESC')->get(),
             'stocks_list' => $period_list
         ));
     }

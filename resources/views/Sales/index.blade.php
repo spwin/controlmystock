@@ -28,7 +28,7 @@
                     ]) }}
             {{ Form::file('file', null, ['class' => 'form-control']) }}
             {{ Form::hidden('stock_period_id', $period) }}
-            {{ Form::submit('Import', ['class' => 'btn btn-success btn-xs']) }}
+            {{ Form::submit('Import', ['class' => 'btn btn-success btn-xs mt-10px']) }}
             {{ Form::close() }}
         <div class="row">
             <div class="col-lg-12">
