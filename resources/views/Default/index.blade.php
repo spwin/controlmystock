@@ -131,6 +131,16 @@
                         @endif
                     </div>
                 </div>
+                <div class="task">
+                    <div class="task-heading"><i class="fa-circle fa fa-fw {{ $summary['wastes'] == 0 ? 'text-danger' : 'text-success' }}"></i> Wastes</div>
+                    <div class="task-content">
+                        @if($summary['wastes'] == 0)
+                            <div class="task-line text-warning"><i class="fa-warning fa fa-fw"></i> No wastes for this period. <a href="{{ action('WastesController@index') }}">Fix this!</a></div>
+                        @else
+                            <div class="task-line text-success"><i class="fa-check fa fa-fw"></i> Completed!</div>
+                        @endif
+                    </div>
+                </div>
             </div>
         </div>
         <div class="col-lg-4">

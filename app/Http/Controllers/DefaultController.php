@@ -254,6 +254,7 @@ class DefaultController extends Controller {
 		$summary_invoices = Purchases::where(['stock_period_id' => $last_period])->count();
         $summary_sales = Sales::where(['stock_period_id' => $last_period])->count();
         $summary_menu = Menu::where(['checked' => 0])->count();
+        $summary_wastes = Wastes::where(['stock_period_id' => $last_period])->count();
         return view('Default.index')->with(array(
             'last_period' => $last_period,
             'date_from' => $period ? date('Y-m-d', strtotime($period->date_from)) : date('Y-m-d', strtotime('-30 days')),
@@ -264,7 +265,7 @@ class DefaultController extends Controller {
             'count' => $count,
             'sales' => count($sales_chart) > 10 ? array_slice($sales_chart, 0, 10) : $sales_chart,
             'wastage' => $wastage,
-            'summary' => ['stock' => $summary_stock, 'invoices' => $summary_invoices, 'sales' => $summary_sales, 'menu' => $summary_menu, 'no_price' => $items_without_price]
+            'summary' => ['stock' => $summary_stock, 'invoices' => $summary_invoices, 'sales' => $summary_sales, 'menu' => $summary_menu, 'no_price' => $items_without_price, 'wastes' => $summary_wastes]
         ));
 	}
 
@@ -303,7 +304,7 @@ class DefaultController extends Controller {
             'Difference' => 'TOTAL',
             'Variance' => '£ '.$total
         ];
-        Excel::create('Event', function($excel) use($ready,$s,$c)
+        Excel::create($c->title, function($excel) use($ready,$s,$c)
         {
             $excel->sheet('Sheetname', function($sheet) use($ready,$s,$c)
             {
