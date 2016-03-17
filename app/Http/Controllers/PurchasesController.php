@@ -218,9 +218,9 @@ class PurchasesController extends Controller {
                 'Date created' => $d['date_created'],
                 'Date delivered' => $d['date_delivered'],
                 'Supplier' => $d['supplier'],
-                'NET' => '£ '.$d['NET'],
-                'VAT' => '£ '.$d['VAT'],
-                'GROSS' => '£ '.$d['GROSS'],
+                'NET' => $d['NET'],
+                'VAT' => $d['VAT'],
+                'GROSS' => $d['GROSS'],
                 'Status' => $d['status']
             ];
             $total_net += $d['NET'];
@@ -232,9 +232,9 @@ class PurchasesController extends Controller {
             'Date created' => '',
             'Date delivered' => '',
             'Supplier' => 'TOTAL',
-            'NET' => '£ '.$total_net,
-            'VAT' => '£ '.$total_vat,
-            'GROSS' => '£ '.($total_net+$total_vat),
+            'NET' => $total_net,
+            'VAT' => $total_vat,
+            'GROSS' => ($total_net+$total_vat),
             'Status' => ''
         ];
         Excel::create('Purchases', function($excel) use($ready, $data)
