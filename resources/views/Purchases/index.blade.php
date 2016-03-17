@@ -22,6 +22,19 @@
                 @include('widgets.button', array('class'=>'btn btn-warning ml-10px', 'value'=>'Filter by period', 'type' => 'submit'))
             {{ Form::close() }}
             </div>
+            <div class="form-group">
+                {{ Form::open([
+                        'action' => array('PurchasesController@exportExcel'),
+                        'class' => ' inline-block pure-form pure-form-aligned',
+                        'role' => 'form',
+                        'method' => 'get',
+                        'id' => 'sales-export-excel'
+                        ]) }}
+                {{ Form::hidden('date_from', $date_from) }}
+                {{ Form::hidden('date_to', $date_to) }}
+                @include('widgets.button', array('class'=>'btn btn-success', 'value'=>'Export Excel', 'type' => 'submit'))
+                {{ Form::close() }}
+            </div>
         <div class="row">
             <div class="col-lg-12">
                 @section ('table_panel_title', $title)

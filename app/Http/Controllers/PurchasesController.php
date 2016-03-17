@@ -14,6 +14,7 @@ use Helper;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PurchasesController extends Controller {
 
@@ -169,6 +170,107 @@ class PurchasesController extends Controller {
         Helper::add(DB::getPdo()->lastInsertId(), 'updated invoice ID '.DB::getPdo()->lastInsertId());
         return Redirect::action('ItemPurchasesController@index', $item->id);
 	}
+
+    function getData(){
+        $currentPeriodId = Helper::defaultPeriodId();
+        $periods = StockPeriods::all();
+        $period_list = array();
+        $period_dates = array();
+        foreach($periods as $period){
+            $period_list[$period->id] = 'Stock #'.$period->number.' ('.$period->date_from.' - '.($period->date_to ? $period->date_to : 'NOW').')';
+            $period_dates[$period->id] = ['from' => date('Y-m-d', strtotime($period->date_from)), 'to' => date('Y-m-d', strtotime($period->date_to))];
+        }
+        if(Input::has('stock_period')){
+            $currentPeriodId = Input::get('stock_period');
+        }
+        $date_from = Input::has('date_from') ? Input::get('date_from') : $period_dates[$currentPeriodId]['from'];
+        $date_to = Input::has('date_to') ? Input::get('date_to') : ($period_dates[$currentPeriodId]['to'] ? $period_dates[$currentPeriodId]['to'] : date('Y-m-d', time()));
+        $purchases_list = Purchases::where('date_created', '>=', $date_from)->where('date_created', '<=', $date_to)->orderBy('date_created', 'DESC')->get();
+        $purchases = array();
+        foreach($purchases_list as $purchase) {
+            $NET = round($purchase->purchases()->sum('price'), 2);
+            $VAT = round($purchase->purchases()->sum('vat'), 2);
+            $purchases['items'][$purchase->id] = [
+                'number' => $purchase->number,
+                'date_created' => $purchase->date_created,
+                'date_delivered' => $purchase->date_delivered,
+                'supplier' => $purchase->supplier()->first() ? $purchase->supplier()->first()->title : '',
+                'NET' => $NET,
+                'VAT' => $VAT,
+                'GROSS' => $NET + $VAT,
+                'status' => $purchase->status ? 'PAID' : 'PENDING'
+            ];
+        }
+        $purchases['from'] = $date_from;
+        $purchases['to'] = $date_to;
+        return $purchases;
+    }
+
+    public function exportExcel() {
+        $data = $this->getData();
+        $ready = [];
+        $total_net = 0;
+        $total_vat = 0;
+        foreach($data['items'] as $key => $d){
+            $ready[$key] = [
+                'ID' => $key,
+                'Invoice number' => $d['number'],
+                'Date created' => $d['date_created'],
+                'Date delivered' => $d['date_delivered'],
+                'Supplier' => $d['supplier'],
+                'NET' => '£ '.$d['NET'],
+                'VAT' => '£ '.$d['VAT'],
+                'GROSS' => '£ '.$d['GROSS'],
+                'Status' => $d['status']
+            ];
+            $total_net += $d['NET'];
+            $total_vat += $d['VAT'];
+        }
+        $ready[] = [
+            'ID' => '',
+            'Invoice number' => '',
+            'Date created' => '',
+            'Date delivered' => '',
+            'Supplier' => 'TOTAL',
+            'NET' => '£ '.$total_net,
+            'VAT' => '£ '.$total_vat,
+            'GROSS' => '£ '.($total_net+$total_vat),
+            'Status' => ''
+        ];
+        Excel::create('Purchases', function($excel) use($ready, $data)
+        {
+            $excel->sheet('Sheetname', function($sheet) use($ready, $data)
+            {
+                $sheet->setAutoSize(true);
+                $sheet->mergeCells('A1:I1');
+                $sheet->mergeCells('A2:I2');
+                //header
+                $sheet->setHeight(1, 40);
+                $sheet->row(1, function ($row) {
+                    $row->setFontSize(30);
+                });
+                $sheet->row(1, array('Purchases ('.$data['from'].' - '.$data['to'].')'));
+                //category
+                /*$sheet->setHeight(2, 30);
+                $sheet->row(2, function ($row) {
+                    $row->setFontSize(20);
+                });
+                $sheet->row(2, array('Category: '.$c->title));*/
+                //table headers
+                $sheet->setHeight(3, 20);
+                $sheet->row(3, function ($row) {
+                    $row->setFontWeight('bold');
+                });
+                $sheet->cells('C', function($cells) {
+                    $cells->setAlignment('left');
+                    $cells->setFontSize(10);
+                });
+                //table data
+                $sheet->setFontSize(10);
+                $sheet->fromArray($ready, null, 'A3');
+            });
+        })->export('xls');
+    }
 
 	/**
 	 * Remove the specified resource from storage.

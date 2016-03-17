@@ -63,6 +63,7 @@ Route::group(['prefix' => 'purchases', 'middleware' => 'auth'], function () {
     Route::post('invoice/generate/{id}', ['uses' =>'ItemPurchasesController@generate']);
     Route::get('invoice/create/{id}/{type}', ['uses' =>'ItemPurchasesController@create']);
     Route::post('invoice/update/{id}', ['uses' =>'ItemPurchasesController@update']);
+    Route::get('excel', 'PurchasesController@exportExcel');
 });
 Route::get('download/{id}', ['uses' =>'FilesController@download']);
 Route::group(['prefix' => 'menu', 'middleware' => 'auth'], function () {
