@@ -30,6 +30,10 @@
                     {{ Form::text('number', null, ['class' => 'form-control', 'placeholder' => 'VAT', 'required' => 'required']) }}
                 </div>
                 <div class="form-group">
+                    {{ Form::label('category_id', 'Purchase category:', ['class' => 'control-label']) }}
+                    {{ Form::select('category_id', [''] + $categories, null, ['class' => 'form-control', 'required' => 'required']) }}
+                </div>
+                <div class="form-group">
                     {{ Form::label('date_created', 'Date created:', ['class' => 'control-label']) }}
                     {{ Form::text('date_created', null, ['class' => 'form-control', 'placeholder' => 'Created']) }}
                 </div>

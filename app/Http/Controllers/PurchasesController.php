@@ -4,6 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Models\Files;
+use App\Models\PurchaseCategory;
 use App\Models\Purchases;
 use App\Models\StockPeriods;
 use App\Models\Suppliers;
@@ -62,6 +63,7 @@ class PurchasesController extends Controller {
         $currentPeriodId = Helper::defaultPeriodId();
         $periods = StockPeriods::all();
         $period_list = array();
+        $categories = PurchaseCategory::lists('title', 'id');
         foreach($periods as $period){
             $period_list[$period->id] = 'Stock #'.$period->number.' ('.$period->date_from.' - '.($period->id == $currentPeriodId ? 'NOW' : $period->date_to).')';
         }
@@ -72,7 +74,8 @@ class PurchasesController extends Controller {
             'title' => $this->title,
             'stocks_list' => $period_list,
             'period' => $currentPeriodId,
-            'suppliers' => Suppliers::orderBy('title', 'ASC')->lists('title', 'id')
+            'suppliers' => Suppliers::orderBy('title', 'ASC')->lists('title', 'id'),
+            'categories' => $categories
         ));
 	}
 
@@ -83,7 +86,24 @@ class PurchasesController extends Controller {
 	 */
 	public function store(Request $request)
 	{
+        $this->validate($request, [
+            'number' => 'unique:purchases,number'
+        ]);
         $input = $request->all();
+        if(array_key_exists('new_supplier', $input)){
+            $check_supplier = Suppliers::where(['title' => $input['custom_supplier']])->get();
+            if(count($check_supplier) > 0 ){
+                $this->validate($request, [
+                    'custom_supplier' => 'unique:suppliers,title'
+                ]);
+                echo 'here';
+            } else {
+                $supplier = Suppliers::create(['title' => $input['custom_supplier']]);
+                $input['supplier_id'] = $supplier->id;
+                echo 'there';
+            }
+        }
+        if($input['category_id'] == 0) $input['category_id'] = null;
         if(array_key_exists('status', $input)){
             $input['status'] = 1;
             $input['date_paid'] = date('Y-m-d H:i:s', time());
@@ -100,7 +120,9 @@ class PurchasesController extends Controller {
         }
         $currentPeriodId = array_key_exists('stock_period_id', $input) ? $input['stock_period_id'] : Helper::currentPeriodId();
         $input['stock_period_id'] = $currentPeriodId;
+
         $purchase = Purchases::create($input);
+
         Helper::add(DB::getPdo()->lastInsertId(), 'created new invoice ID '.DB::getPdo()->lastInsertId());
         return Redirect::action('ItemPurchasesController@index', $purchase->id);
 	}
@@ -127,6 +149,7 @@ class PurchasesController extends Controller {
         $currentPeriodId = Helper::defaultPeriodId();
         $item = Purchases::findOrFail($id);
         $periods = StockPeriods::all();
+        $categories = PurchaseCategory::lists('title', 'id');
         $period_list = array();
         foreach($periods as $period){
             $period_list[$period->id] = 'Stock #'.$period->number.' ('.$period->date_from.' - '.($period->id == $currentPeriodId ? 'NOW' : $period->date_to).')';
@@ -135,7 +158,8 @@ class PurchasesController extends Controller {
             'title' => $this->title,
             'item' => $item,
             'stocks_list' => $period_list,
-            'suppliers' => Suppliers::orderBy('title', 'ASC')->lists('title', 'id')
+            'suppliers' => Suppliers::orderBy('title', 'ASC')->lists('title', 'id'),
+            'categories' => $categories
         ));
 	}
 
@@ -155,6 +179,7 @@ class PurchasesController extends Controller {
         } else {
             $input['status'] = 0;
         }
+        if($input['category_id'] == 0) $input['category_id'] = null;
         if(array_key_exists('file', $input)){
             if($input['file']->isValid()){
                 $filename = 'invoice_'.date('Y_m_d_His').'.'.$input['file']->getClientOriginalExtension();

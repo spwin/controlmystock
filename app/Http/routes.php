@@ -59,6 +59,7 @@ Route::group(['prefix' => 'purchases', 'middleware' => 'auth'], function () {
     Route::resource('suppliers', 'SuppliersController');
     Route::resource('list', 'PurchasesController');
     Route::resource('invoice', 'ItemPurchasesController');
+    Route::resource('categories', 'PurchaseCategoriesController');
     Route::get('invoice/index/{id}', ['uses' =>'ItemPurchasesController@index']);
     Route::post('invoice/generate/{id}', ['uses' =>'ItemPurchasesController@generate']);
     Route::get('invoice/create/{id}/{type}', ['uses' =>'ItemPurchasesController@create']);

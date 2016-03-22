@@ -28,6 +28,11 @@
                         {{ Form::text('number', null, ['class' => 'form-control', 'placeholder' => 'VAT', 'required' => 'required']) }}
                     </div>
                     <div class="form-group">
+                        {{ Form::label('category_id', 'Purchase category:', ['class' => 'control-label']) }}
+                        {{ Form::select('category_id', [''] + $categories, null, ['class' => 'form-control', 'required' => 'required']) }}
+                        <p class="help-block">Not found suitable category? <a href="{{ action('PurchaseCategoriesController@create') }}">Create new category</a></p>
+                    </div>
+                    <div class="form-group">
                         {{ Form::label('date_created', 'Date created:', ['class' => 'control-label']) }}
                         {{ Form::text('date_created', null, ['class' => 'form-control', 'placeholder' => 'Created']) }}
                     </div>
@@ -37,7 +42,9 @@
                     </div>
                     <div class="form-group">
                         {{ Form::label('supplier_id', 'Supplier:', ['class' => 'control-label']) }}
+                        {{ Form::text('custom_supplier', null, ['class' => 'form-control', 'placeholder' => 'Supplier name', 'style' => 'display: none;']) }}
                         {{ Form::select('supplier_id', $suppliers, null, ['class' => 'form-control']) }}
+                        {{ Form::checkbox('new_supplier', null); }} New supplier
                     </div>
                     <div class="form-group">
                         {{ Form::label('stock_period_id', 'Stock period:', ['class' => 'control-label']) }}
@@ -56,6 +63,22 @@
 @stop
 @push('scripts')
 <script type="text/javascript">
+    function setCustomer(){
+        if($('input[name="new_supplier"]').is(':checked')){
+            $('#supplier_id').hide();
+            $('input[name="custom_supplier"]').show();
+        } else {
+            $('#supplier_id').show();
+            $('input[name="custom_supplier"]').hide();
+        }
+    }
+    $(document).ready(function(){
+        setCustomer();
+    });
+    $('input[name="new_supplier"]').on('click', function(){
+        $('#supplier_id').toggle();
+        $('input[name="custom_supplier"]').toggle();
+    });
     $(function() {
         $( "#date_created" ).datepicker({
             maxDate: 'today',

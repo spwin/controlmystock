@@ -51,6 +51,9 @@
                     <li {{ (Request::is('*purchases/suppliers*') ? 'class="active"' : '') }}>
                         <a href="{{ action('SuppliersController@index') }}"> Suppliers</a>
                     </li>
+                    <li {{ (Request::is('*purchases/categories*') ? 'class="active"' : '') }}>
+                        <a href="{{ action('PurchaseCategoriesController@index') }}"> Categories</a>
+                    </li>
                     <li {{ (Request::is('*purchases/list*') ? 'class="active"' : '') }}>
                         <a href="{{ action('PurchasesController@index') }}"> Purchases</a>
                     </li>
