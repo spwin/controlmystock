@@ -34,6 +34,10 @@
                     {{ Form::select('category_id', [''] + $categories, null, ['class' => 'form-control', 'required' => 'required']) }}
                 </div>
                 <div class="form-group">
+                    {{ Form::label('vat_date', 'VAT data:', ['class' => 'control-label']) }}
+                    {{ Form::text('vat_date', null, ['class' => 'form-control', 'placeholder' => 'VAT date']) }}
+                </div>
+                <div class="form-group">
                     {{ Form::label('date_created', 'Date created:', ['class' => 'control-label']) }}
                     {{ Form::text('date_created', null, ['class' => 'form-control', 'placeholder' => 'Created']) }}
                 </div>
@@ -70,6 +74,10 @@
             dateFormat: 'yy-mm-dd'
         });
         $( "#date_delivered" ).datepicker({
+            maxDate: 'today',
+            dateFormat: 'yy-mm-dd'
+        });
+        $( "#vat_date" ).datepicker({
             maxDate: 'today',
             dateFormat: 'yy-mm-dd'
         });

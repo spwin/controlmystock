@@ -45,7 +45,7 @@
                                 <th>ID</th>
                                 <th>Invoice Nr</th>
                                 <th>Category</th>
-                                <th>Created</th>
+                                <th>VAT date</th>
                                 <th>Supplier</th>
                                 <th>NET</th>
                                 <th>VAT</th>
@@ -64,7 +64,7 @@
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->number }}</td>
                                     <td>{{ $item->category()->first() ? $item->category()->first()->title : '--' }}</td>
-                                    <td>{{ $item->date_created }}</td>
+                                    <td>{{ $item->vat_date }}</td>
                                     <td>{{ $item->supplier()->first() ? '<a href="'.action('SuppliersController@show', $item->supplier()->first()->id).'">'.$item->supplier()->first()->title.'</a>' : '' }}</td>
                                     <td><strong>£ {{ round($item->purchases()->sum('price'), 2) }}</strong></td>
                                     <td><strong>£ {{ round($item->purchases()->sum('vat'), 2) }}</strong></td>

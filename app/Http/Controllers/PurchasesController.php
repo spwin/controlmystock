@@ -43,7 +43,7 @@ class PurchasesController extends Controller {
         $date_to = Input::has('date_to') ? Input::get('date_to') : ($period_dates[$currentPeriodId]['to'] ? $period_dates[$currentPeriodId]['to'] : date('Y-m-d', time()));
 		return view('Purchases.index')->with(array(
             'title' => $this->title,
-            'items' => Purchases::where('date_created', '>=', $date_from)->where('date_created', '<=', $date_to)->orderBy('date_created', 'DESC')->get(),
+            'items' => Purchases::where('vat_date', '>=', $date_from)->where('date_created', '<=', $date_to)->orderBy('vat_date', 'DESC')->get(),
             'period' => $currentPeriodId,
             'running_period' => $running,
             'stocks_list' => $period_list,
