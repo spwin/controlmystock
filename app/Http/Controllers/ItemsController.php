@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ItemsController extends Controller {
 
@@ -113,7 +114,7 @@ class ItemsController extends Controller {
         ));
     }
 
-    public function pricesAll(){
+    function countAverages(){
         $items = [];
         $items_all = Items::select('items.price as price', 'items.title as title', 'item_categories.title as category', 'units.title as unit', 'suppliers.title as supplier', 'items.id as id', DB::raw('avg(item_purchases.price/item_purchases.value) AS average'))
             ->leftJoin('item_categories', 'items.category_id', '=', 'item_categories.id')
@@ -140,10 +141,65 @@ class ItemsController extends Controller {
             }
             $items[] = $item_data;
         }
+        return $items;
+    }
+
+    public function pricesAll(){
+
         return view('Items.all-prices')->with([
             'title' => 'All items prices',
-            'items' => $items
+            'items' => $this->countAverages()
         ]);
+    }
+
+    public function exportPricesExcel(){
+        $data = $this->countAverages();
+        $ready = [];
+        $total_net = 0;
+        $total_vat = 0;
+        foreach($data as $key => $d){
+            $ready[$key] = [
+                '#' => $key,
+                'Category' => $d['category'],
+                'Item name' => $d['title'],
+                'Unit' => $d['unit'],
+                'Price per unit' => $d['price'],
+                'Supplier' => $d['supplier']
+            ];
+        }
+        Excel::create('Prices', function($excel) use($ready, $data)
+        {
+            $excel->sheet('Sheetname', function($sheet) use($ready, $data)
+            {
+                $sheet->setAutoSize(true);
+                $sheet->mergeCells('A1:F1');
+                $sheet->mergeCells('A2:F2');
+                //header
+                $sheet->setHeight(1, 40);
+                $sheet->row(1, function ($row) {
+                    $row->setFontSize(30);
+                });
+                $sheet->row(1, array('Prices table'));
+                //category
+                /*$sheet->setHeight(2, 30);
+                $sheet->row(2, function ($row) {
+                    $row->setFontSize(20);
+                });
+                $sheet->row(2, array('Category: '.$c->title));*/
+                //table headers
+                $sheet->setHeight(3, 20);
+                $sheet->row(3, function ($row) {
+                    $row->setFontWeight('bold');
+                });
+                $sheet->cells('C', function($cells) {
+                    $cells->setAlignment('left');
+                    $cells->setFontSize(10);
+                });
+                //table data
+                $sheet->setFontSize(10);
+                $sheet->fromArray($ready, null, 'A3');
+            });
+        })->export('xls');
     }
 
     public function setPrice($id){

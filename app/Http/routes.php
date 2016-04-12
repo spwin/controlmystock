@@ -14,6 +14,7 @@ Route::group(['prefix' => 'items', 'middleware' => 'auth'], function () {
 
     Route::get('item-categories/create/{parent}', ['uses' =>'ItemCategoriesController@create']);
 
+    Route::get('export-excel', ['uses' => 'ItemsController@exportPricesExcel']);
     Route::resource('items', 'ItemsController');
     Route::get('prices', ['uses' =>'ItemsController@prices']);
     Route::get('all-prices-by-suppliers', ['uses' => 'ItemsController@pricesAll']);

@@ -7,6 +7,7 @@
                 {{ Session::get('flash_message') }}
             </div>
         @endif
+        <a class="btn btn-success inline-block mb-20px" href="{{ action('ItemsController@exportPricesExcel') }}">Export excel</a>
         <div class="row">
             <div class="col-lg-12">
                 @section ('table_panel_title', $title)
