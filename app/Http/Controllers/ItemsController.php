@@ -1,7 +1,12 @@
 <?php namespace App\Http\Controllers;
 
 use App\Models\History;
+use App\Models\ItemPurchases;
 use App\Models\Purchases;
+use App\Models\Sales;
+use App\Models\StockItem;
+use App\Models\StockPeriods;
+use App\Models\Wastes;
 use Helper;
 use App\Http\Requests;
 use App\Models\Units;
@@ -106,6 +111,39 @@ class ItemsController extends Controller {
             'title' => 'Items without price',
             'items' => $items
         ));
+    }
+
+    public function pricesAll(){
+        $items = [];
+        $items_all = Items::select('items.price as price', 'items.title as title', 'item_categories.title as category', 'units.title as unit', 'suppliers.title as supplier', 'items.id as id', DB::raw('avg(item_purchases.price/item_purchases.value) AS average'))
+            ->leftJoin('item_categories', 'items.category_id', '=', 'item_categories.id')
+            ->leftJoin('item_purchases', 'items.id', '=', 'item_purchases.item_id')
+            ->leftJoin('purchases', 'item_purchases.purchase_id', '=', 'purchases.id')
+            ->leftJoin('suppliers', 'purchases.supplier_id', '=', 'suppliers.id')
+            ->leftJoin('item_units', 'items.id', '=', 'item_units.item_id')
+            ->leftJoin('units', 'item_units.unit_id', '=', 'units.id')
+            ->where(['item_units.default' => 1])
+            ->groupBy('items.id', 'suppliers.id')
+            ->orderBy('item_categories.title', 'ASC')
+            ->orderBy('items.title', 'ASC')
+            ->get();
+
+        foreach($items_all as $item){
+            $item_data['title'] = $item->title;
+            $item_data['category'] = $item->category;
+            $item_data['unit'] = $item->unit;
+            $item_data['supplier'] = $item->supplier;
+            if($item->supplier) {
+                $item_data['price'] = $item->average;
+            } else {
+                $item_data['price'] = $item->price;
+            }
+            $items[] = $item_data;
+        }
+        return view('Items.all-prices')->with([
+            'title' => 'All items prices',
+            'items' => $items
+        ]);
     }
 
     public function setPrice($id){

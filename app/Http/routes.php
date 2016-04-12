@@ -16,6 +16,7 @@ Route::group(['prefix' => 'items', 'middleware' => 'auth'], function () {
 
     Route::resource('items', 'ItemsController');
     Route::get('prices', ['uses' =>'ItemsController@prices']);
+    Route::get('all-prices-by-suppliers', ['uses' => 'ItemsController@pricesAll']);
     Route::get('set-price/{id}', ['uses' =>'ItemsController@setPrice']);
     Route::post('update-price/{id}', ['uses' =>'ItemsController@updatePrice']);
     Route::resource('item-units', 'ItemUnitsController');
