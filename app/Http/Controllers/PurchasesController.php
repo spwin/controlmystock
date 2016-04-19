@@ -220,6 +220,7 @@ class PurchasesController extends Controller {
                 'date_created' => $purchase->date_created,
                 'vat_date' => $purchase->vat_date,
                 'supplier' => $purchase->supplier()->first() ? $purchase->supplier()->first()->title : '',
+                'category' => $purchase->category()->first() ? $purchase->category()->first()->title : '',
                 'NET' => $NET,
                 'VAT' => $VAT,
                 'GROSS' => $NET + $VAT,
@@ -240,6 +241,7 @@ class PurchasesController extends Controller {
             $ready[$key] = [
                 'ID' => $key,
                 'Invoice number' => $d['number'],
+                'Category' => $d['category'],
                 'Date created' => $d['date_created'],
                 'VAT date' => $d['vat_date'],
                 'Supplier' => $d['supplier'],
@@ -254,6 +256,7 @@ class PurchasesController extends Controller {
         $ready[] = [
             'ID' => '',
             'Invoice number' => '',
+            'Category' => '',
             'Date created' => '',
             'VAT date' => '',
             'Supplier' => 'TOTAL',
@@ -267,8 +270,8 @@ class PurchasesController extends Controller {
             $excel->sheet('Sheetname', function($sheet) use($ready, $data)
             {
                 $sheet->setAutoSize(true);
-                $sheet->mergeCells('A1:I1');
-                $sheet->mergeCells('A2:I2');
+                $sheet->mergeCells('A1:J1');
+                $sheet->mergeCells('A2:J2');
                 //header
                 $sheet->setHeight(1, 40);
                 $sheet->row(1, function ($row) {
