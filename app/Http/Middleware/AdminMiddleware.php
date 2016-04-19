@@ -17,7 +17,7 @@ class AdminMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if ($request->user()->role != 'admin') {
+        if ($request->user()->role != 'admin' && $request->user()->role != 'user') {
             return Redirect::action('ClientController@index');
         }
 
