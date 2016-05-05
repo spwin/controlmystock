@@ -33,7 +33,7 @@ class StockCheckController extends Controller {
             $last_period = StockPeriods::where(['number' => StockPeriods::findOrFail($currentPeriodId)->number - 1])->get();
             return view('StockCheck.index')->with(array(
                 'title' => $this->title,
-                'items' => $search ? Items::where('title', 'LIKE', '%' . $search . '%')->take(10)->get() : ($filter == 'without_stock' ? Items::select('items.*')->whereRaw('not exists (select 1 from stock_items where stock_items.stock_period_id = '.$currentPeriodId.' and stock_items.item_id = items.id)')->orderBy("updated_at", 'DESC')->take(10)->get() : Items::orderBy("updated_at", 'DESC')->take(10)->get()),
+                'items' => $search ? Items::where('title', 'LIKE', '%' . $search . '%')->take(10)->get() : ($filter == 'without_stock' ? Items::select('items.*')->whereRaw('not exists (select 1 from stock_items where stock_items.stock_period_id = '.$currentPeriodId.' and stock_items.item_id = items.id)')->orderBy("updated_at", 'DESC')->get() : Items::orderBy("updated_at", 'DESC')->take(10)->get()),
                 'item_list' => Items::lists('title'),
                 'search' => $search,
                 'period' => $currentPeriodId,
