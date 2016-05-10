@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Purchases extends Model {
 
-	protected $fillable = ['date_created', 'date_delivered', 'number', 'supplier_id', 'invoice_id', 'status', 'date_paid', 'stock_period_id', 'category_id'];
+	protected $fillable = ['date_created', 'date_delivered', 'number', 'supplier_id', 'invoice_id', 'status', 'date_paid', 'stock_period_id', 'category_id', 'vat_date'];
 
     public function supplier(){
         return $this->hasOne('App\Models\Suppliers', 'id', 'supplier_id');
