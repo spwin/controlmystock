@@ -13,8 +13,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Helper;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use Maatwebsite\Excel\Facades\Excel;
 
 class PurchasesController extends Controller {
@@ -314,5 +316,14 @@ class PurchasesController extends Controller {
         Session::flash('flash_message', $this->title.' successfully deleted!');
         return Redirect::action('PurchasesController@index');
 	}
+
+    public function checkNumber(){
+        $number = Input::get('number');
+        $invoice = Purchases::where(['number' => $number])->first();
+        if(count($invoice) == 0)
+            return json_encode('<span class="text-success">All fine. You can use this invoice number.</span>');
+        else
+            return json_encode('<span class="text-danger">This invoice number is in use. <a href="'.URL::action('ItemPurchasesController@index', $invoice->id).'">See invoice No.'.$number.'</a></span>');
+    }
 
 }

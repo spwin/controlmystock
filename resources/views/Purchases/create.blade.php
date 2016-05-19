@@ -28,6 +28,10 @@
                         {{ Form::text('number', null, ['class' => 'form-control', 'placeholder' => 'VAT', 'required' => 'required']) }}
                     </div>
                     <div class="form-group">
+                        <a href="#" id="check_number" class="btn btn-xs btn-success">Check number</a>
+                        <span id="exists_status"></span>
+                    </div>
+                    <div class="form-group">
                         {{ Form::label('category_id', 'Purchase category:', ['class' => 'control-label']) }}
                         {{ Form::select('category_id', [''] + $categories, null, ['class' => 'form-control', 'required' => 'required']) }}
                         <p class="help-block">Not found suitable category? <a href="{{ action('PurchaseCategoriesController@create') }}">Create new category</a></p>
@@ -77,6 +81,23 @@
         }
     }
     $(document).ready(function(){
+        $('#check_number').on('click', function(e){
+            e.preventDefault();
+            var number = $('input#number').val();
+            if(number != '') {
+                $.ajax({
+                    url: '{{ action('PurchasesController@checkNumber') }}',
+                    type: 'POST',
+                    data: {_token: '{{ csrf_token() }}', number: number},
+                    dataType: 'JSON',
+                    success: function (data) {
+                        $('span#exists_status').html(data);
+                    }
+                });
+            } else {
+                $('span#exists_status').html('<span class="text-danger">Please fill the number field first.</span>');
+            }
+        });
         setCustomer();
     });
     $('input[name="new_supplier"]').on('click', function(){
