@@ -95,7 +95,7 @@
             var total = parseFloat($('input#price_vat').val());
             var price = total*0.8;
             var vat = total*0.2;
-            $('input#vat_checkbox').attr('checked', 'checked');
+            $('input#vat_checkbox').prop('checked', true);
             $('input#vat').prop('disabled', false);
             $('input#price').val(price.toFixed(2));
             $('input#vat').val(vat.toFixed(2));
