@@ -51,6 +51,17 @@
                         {{ Form::label('vat', 'VAT:', ['class' => 'control-label']) }}
                         {{ Form::input('number', 'vat', null, ['step' => 'any', 'class' => 'form-control', 'disabled' => 'disabled']) }}
                     </div>
+                    <p class="help-block"><a href="#" class="generate-price-fom-total">Generate from total</a></p>
+                </div>
+
+                <div class="form-group generator-price" style="display: none;">
+                    <div class="w-40p inline-block" style="width: 40%;">
+                        {{ Form::label('price_vat', 'Total + VAT:', ['class' => 'control-label']) }}
+                        {{ Form::input('number', 'price_vat', null, ['step' => 'any', 'class' => 'form-control']) }}
+                    </div>
+                    <div class="inline-block">
+                        <a class="btn btn-warning generate-price">Generate price</a>
+                    </div>
                 </div>
 
                 @include('widgets.button', array('class'=>'btn btn-primary', 'value'=>'Submit', 'type' => 'submit'))
@@ -68,7 +79,7 @@
             if(price.val()) {
                 if ($(this).is(':checked')) {
                     vat.prop('disabled', false);
-                    vat.val((price.val()*0.2).toFixed(2));
+                    vat.val((price.val()*0.25).toFixed(2));
                 } else {
                     vat.prop('disabled', true);
                     vat.val('');
@@ -77,6 +88,19 @@
                 e.preventDefault();
                 price.focus();
             }
+        });
+        $('.generate-price-fom-total').click(function(){
+            $('.generator-price').slideToggle('fast');
+        });
+        $('.generate-price').click(function(){
+            var total = parseFloat($('input#price_vat').val());
+            var price = total*0.8;
+            var vat = total*0.2;
+            $('input#vat_checkbox').attr('checked', 'checked');
+            $('input#vat').prop('disabled', false);
+            $('input#price').val(price.toFixed(2));
+            $('input#vat').val(vat.toFixed(2));
+            $('.generator-price').hide();
         });
         purchaseItemForm.init($('#invoice-add-item-form'), $('select#item_id'), $('select#units'), $('input#value'), $('input#value_entered'), <?php echo json_encode($items_units['list']); ?>, <?php echo json_encode($items_units['factors']); ?>, <?php echo json_encode($items_units['item_to_unit']); ?>);
     });
