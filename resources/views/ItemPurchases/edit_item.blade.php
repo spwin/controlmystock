@@ -79,7 +79,7 @@
             if(price.val()) {
                 if ($(this).is(':checked')) {
                     vat.prop('disabled', false);
-                    vat.val((price.val()*0.25).toFixed(2));
+                    vat.val((price.val()*0.2).toFixed(2));
                 } else {
                     vat.prop('disabled', true);
                     vat.val('');
@@ -94,8 +94,8 @@
         });
         $('.generate-price').click(function(){
             var total = parseFloat($('input#price_vat').val());
-            var price = total*0.8;
-            var vat = total*0.2;
+            var price = total/1.2;
+            var vat = price*0.2;
             $('input#vat_checkbox').prop('checked', true);
             $('input#vat').prop('disabled', false);
             $('input#price').val(price.toFixed(2));
