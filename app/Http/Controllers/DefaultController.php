@@ -209,6 +209,7 @@ class DefaultController extends Controller {
         }
         $all_items = Items::all();
         $variance = 0;
+        $closing_stock = 0;
         $count = 0;
         foreach($all_items as $item){
             if(!array_key_exists($item->category()->first()->id, $items)){
@@ -246,6 +247,7 @@ class DefaultController extends Controller {
             $current_item['stock_difference'] = $current_item['current_stock'] - $current_item['must_stock'];
             $current_item['variance'] = round($current_item['stock_difference'] * $current_item['purchases']['price'], 2);
             $variance += $current_item['variance'];
+            $closing_stock += round($current_item['current_stock'] * $current_item['purchases']['price'], 2);
             $items[$item->category()->first()->id]['variance'] += $current_item['variance'];
             $items[$item->category()->first()->id]['items'][$item->id] = $current_item;
             $count++;
@@ -261,6 +263,7 @@ class DefaultController extends Controller {
             'date_to' => $period ? date('Y-m-d', strtotime($period->date_to)) : date('Y-m-d', time()),
             'last_stock_summary_items' => $items,
             'variance' => $variance,
+            'closing_stock' => $closing_stock,
             'items' => $items,
             'count' => $count,
             'sales' => count($sales_chart) > 10 ? array_slice($sales_chart, 0, 10) : $sales_chart,

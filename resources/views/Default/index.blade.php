@@ -29,6 +29,7 @@
     <div class="row">
         <div class="col-lg-10">
             <h2>VARIANCE: <strong {{ $variance >= 0 ? 'class="text-success"' : 'class="text-danger"' }}>£ {{ $variance }}</strong></h2>
+            <h3>Closing stock: <strong class="text-success">£ {{ $closing_stock }}</strong></h3>
             <a href="" class="summary-header" id="show_all_variances"><i class="fa-arrow-circle-down fa fa-fw"></i>Show all ({{ $count }})</a>
             <ul class="summary">
             @foreach ($items as $key => $item)
